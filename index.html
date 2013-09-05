@@ -1,0 +1,68 @@
+<!doctype html>
+<html>
+  <head>
+    <title>loading Graviphoton</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="dist/graviphoton.css"></link>
+    <link rel="stylesheet/less" type="text/css" href="dist/graviphoton.less"></link>
+
+    <script type="text/html" id="template-header">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">Graviphoton</a>
+        </div>
+        <div class="navbar-collapse">
+          <ul class="nav navbar-nav">
+            <% /*console.log(this); _.each(modules, function(module) { %>
+              <li><%= module.moduleName %></li>
+            <% });*/ %>
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="#"><i class="icon-user"></i></a></li>
+            <li><a href="#"><i class="icon-bell"></i></a></li>
+            <li><a href="#"><i class="icon-wrench"></i></a></li>
+            <li>
+              <input type="text" class="form-control" placeholder="Search">
+            </li>
+          </ul>
+        </div>
+      </div>
+    </script>
+    <script type="text/html" id="template-footer">
+      <div class="container">
+        <p class="text-muted credit">&copy; 2013 Swisscom IT Services. &middot; <a href="#">About</a></p>
+      </div>
+    </script>
+  </head>
+
+  <body id="graviphoton">
+
+    <section>
+      <header id="header" class="navbar navbar-default"></header>
+      <section id="main" class="main-region container">
+       <p class="lead">This is the Graviphoton interface prototype. It aims at showing off how backbone marionette gets used alongside twitter bootstrap to create an app that is pleasing for the developer as well as the user.</p>
+       <p>So far everything seems to work out. I'm especially glad that bootstrap and backbone seem to like each other. I also stumbed upon font-awesome again and decided to start using that instead of a sprite sheet. So far this uses the following components.</p>
+       <ul>
+         <li>underscore.js</li>
+         <li>backbone.js</li>
+         <li>backbone.marionette</li>
+         <li>twitter-bootstrap</li>
+         <li>font-awesome</li>
+       <ul>
+      </section>
+      <footer id="footer" class="footer-region"></footer>
+    </section>
+
+    <script type="text/javascript" src="dist/graviphoton.js"></script>
+    <script type="text/javascript">
+      $(function(){
+        Graviphoton.start();
+      });
+    </script>
+  </body>
+</html>
