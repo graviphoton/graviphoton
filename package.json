@@ -1,0 +1,34 @@
+{
+  "name": "graviphoton",
+  "version": "0.0.1",
+  "description": "graviphoton ui core",
+  "keywords": [
+    "graviton",
+    "gui"
+  ],
+  "author": "Lucas Bickel <lucas.bickel@swisscom.com",
+  "contributors": [],
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:graviphoton/core.git"
+  },
+  "main": "./index",
+  "engines": {
+    "node": "*"
+  },
+  "scripts": {},
+  "dependencies": {},
+  "devDependencies": {
+    "grunt-cli": "*",
+    "qunit": "*",
+    "grunt-contrib-uglify": "*",
+    "grunt-contrib-jshint": "*",
+    "grunt-contrib-qunit": "*",
+    "grunt-contrib-watch": "*",
+    "grunt-contrib-concat": "*",
+    "grunt-contrib-csslint": "*",
+    "grunt-contrib-cssmin": "*",
+    "grunt-contrib-copy": "~0.4.1",
+    "grunt-replacer": "~0.1.0"
+  }
+}

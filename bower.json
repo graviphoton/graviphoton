@@ -1,0 +1,24 @@
+{
+  "name": "Graviphoton",
+  "version": "0.0.1",
+  "authors": [
+    "Lucas Bickel <hairmare@purplehaze.ch>"
+  ],
+  "license": "GPL",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "underscore": "~1.5.1",
+    "backbone": "~1.0",
+    "backbone.marionette": "~1.1.0",
+    "bootstrap": "~3.0.0",
+    "less.js": "~1.4.2",
+    "font-awesome": "~3.2.1",
+    "jquery": "~2.0.3"
+  }
+}
