@@ -30,6 +30,8 @@
     "grunt-contrib-csslint": "*",
     "grunt-contrib-cssmin": "*",
     "grunt-contrib-copy": "~0.4.1",
-    "grunt-replacer": "~0.1.0"
+    "grunt-replacer": "~0.1.0",
+    "grunt-preprocess": "~3.0.1",
+    "grunt-env": "~0.4.0"
   }
 }

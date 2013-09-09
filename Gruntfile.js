@@ -8,6 +8,14 @@ module.exports = function(grunt) {
       dest: 'dist',
       bower: { src: 'bower_components' }
     },
+    env: {
+      dev: {
+        NODE_ENV: 'development'
+      },
+      prod: {
+        NODE_ENV: 'production'
+      }
+    },
     concat: {
       js: { 
         options: {
@@ -58,7 +66,7 @@ module.exports = function(grunt) {
       font_awesome_path: {
         options: {
           replace: {
-            '../font/fontawesome-webfont': '../dist/font/fontawesome-webfont'
+            '../font/fontawesome-webfont': 'font/fontawesome-webfont'
           }
         },
         files: [
@@ -111,6 +119,29 @@ module.exports = function(grunt) {
         src: ['<%= dirs.src %>/**/*.css']
       }
     },
+    preprocess: {
+      dev: {
+        files: {
+          '<%= dirs.dest %>/dev.html': ['index.html']
+        },
+        options: {
+          context: {
+            BOWER_DIR: '../<%= dirs.bower.src %>',
+            CSS_INCLUDES: '<% var css_files = [];'+
+                          'grunt.util.recurse(concat.css.src, function(a) { css_files.push(grunt.file.expand(grunt.template.process(a))); }); '+
+                          'grunt.util.recurse(css_files, function (a) { %><link rel="stylesheet" type="text/css" href="../<%= a %>"></link>\n    <% }); %>',
+            JS_INCLUDES: '<% var js_files = []; '+
+                         'grunt.util.recurse(concat.js.src, function(a) { js_files.push(grunt.file.expand(grunt.template.process(a))); }); '+
+                         'grunt.util.recurse(js_files, function (a) { %><script type="text/javascript" src="../<%= a %>"></script>\n    <% }); %>'
+          }
+        }
+      },
+      prod: {
+        files: {
+          '<%= dirs.dest %>/index.html': ['index.html']
+        }
+      }
+    },
     watch: {
       files: ['<%= jshint.files %>'],
       tasks: ['jshint', 'qunit']
@@ -126,9 +157,12 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-cssmin');
   grunt.loadNpmTasks('grunt-replacer');
   grunt.loadNpmTasks('grunt-contrib-copy');
+  grunt.loadNpmTasks('grunt-env');
+  grunt.loadNpmTasks('grunt-preprocess');
 
-  grunt.registerTask('test', ['jshint', 'csslint', 'qunit']);
+  grunt.registerTask('test', ['env', 'jshint', 'csslint', 'qunit']);
+  grunt.registerTask('dev', ['env:dev', 'preprocess:dev', 'copy:font_awesome']);
+  grunt.registerTask('prod', ['env:prod', 'preprocess:prod', 'concat', 'copy', 'replacer', 'uglify', 'cssmin']);
 
-  grunt.registerTask('default', ['jshint', 'csslint', 'qunit', 'concat', 'copy', 'replacer', 'uglify', 'cssmin']);
-
+  grunt.registerTask('default', ['test', 'dev', 'prod']);
 };

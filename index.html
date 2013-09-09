@@ -1,10 +1,16 @@
 <!doctype html>
 <html>
   <head>
-    <title>loading Graviphoton</title>
+    <title>loading Graviphoton <!-- @echo NODE_ENV --></title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="dist/graviphoton.css"></link>
-    <link rel="stylesheet/less" type="text/css" href="dist/graviphoton.less"></link>
+<!-- @if NODE_ENV=='production' -->
+    <link rel="stylesheet" type="text/css" href="graviphoton.min.css"></link>
+    <link rel="stylesheet/less" type="text/css" href="graviphoton.less"></link>
+<!-- @endif -->
+<!-- @if NODE_ENV=='development' -->
+    <!-- @echo CSS_INCLUDES -->
+    <link rel="stylesheet/less" type="text/css" href="graviphoton.less"></link>
+<!-- @endif -->
 
     <script type="text/html" id="template-header">
       <div class="container">
@@ -58,11 +64,21 @@
       <footer id="footer" class="footer-region"></footer>
     </section>
 
-    <script type="text/javascript" src="dist/graviphoton.js"></script>
+<!-- @if NODE_ENV=='production' -->
+    <script type="text/javascript" src="graviphoton.min.js"></script>
     <script type="text/javascript">
       $(function(){
         Graviphoton.start();
       });
     </script>
+<!-- @endif -->
+<!-- @if NODE_ENV=='development' -->
+    <!-- @echo JS_INCLUDES -->
+    <script type="text/javascript">
+      $(function(){
+        Graviphoton.start();
+      });
+    </script>
+<!-- @endif -->
   </body>
 </html>

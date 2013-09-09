@@ -30,7 +30,7 @@ grunt
 
 ## Testing
 
-Navigate to ````index.html````.
+Navigate to ````dist/index.html```` or ````dist/dev.html````.
 
 ## Releasing
 
