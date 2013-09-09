@@ -19,8 +19,9 @@
   "scripts": {},
   "dependencies": {},
   "devDependencies": {
-    "grunt-cli": "*",
+    "bower": "~1.2.6",
     "qunit": "*",
+    "grunt-cli": "*",
     "grunt-contrib-uglify": "*",
     "grunt-contrib-jshint": "*",
     "grunt-contrib-qunit": "*",
