@@ -129,7 +129,10 @@ module.exports = function(grunt) {
             BOWER_DIR: '../<%= dirs.bower.src %>',
             CSS_INCLUDES: '<% var css_files = [];'+
                           'grunt.util.recurse(concat.css.src, function(a) { css_files.push(grunt.file.expand(grunt.template.process(a))); }); '+
-                          'grunt.util.recurse(css_files, function (a) { %><link rel="stylesheet" type="text/css" href="../<%= a %>"></link>\n    <% }); %>',
+                          'grunt.util.recurse(css_files, function (a) { %><link rel="stylesheet" type="text/css" href="../<%= a %>" />\n    <% }); %>',
+            LESS_INCLUDES: '<% var less_files = [];'+
+                           'grunt.util.recurse(concat.less.src, function(a) { less_files.push(grunt.file.expand(grunt.template.process(a))); }); '+
+                           'grunt.util.recurse(less_files, function (a) { %><link rel="stylesheet/less" type="text/css" href="../<%= a %>" />\n    <% }); %>',
             JS_INCLUDES: '<% var js_files = []; '+
                          'grunt.util.recurse(concat.js.src, function(a) { js_files.push(grunt.file.expand(grunt.template.process(a))); }); '+
                          'grunt.util.recurse(js_files, function (a) { %><script type="text/javascript" src="../<%= a %>"></script>\n    <% }); %>'
