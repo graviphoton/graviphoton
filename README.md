@@ -24,3 +24,4 @@ Running ````grunt```` creates the dist files that are getting deployed.
 ## TODO
 
 * finalize appmodule module and integrate with layout header (need to grok backbone models/sync)
+* create dev.html (using templating and contents of gruntfile)
