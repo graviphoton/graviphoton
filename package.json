@@ -16,7 +16,9 @@
   "engines": {
     "node": "*"
   },
-  "scripts": {},
+  "scripts": {
+    "test": "grunt travis --verbose"
+  },
   "dependencies": {},
   "devDependencies": {
     "bower": "~1.2.6",
