@@ -164,6 +164,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-preprocess');
 
   grunt.registerTask('test', ['env', 'jshint', 'csslint', 'qunit']);
+  grunt.registerTask('travis', 'test');
   grunt.registerTask('dev', ['env:dev', 'preprocess:dev', 'copy:font_awesome']);
   grunt.registerTask('prod', ['env:prod', 'preprocess:prod', 'concat', 'copy', 'replacer', 'uglify', 'cssmin']);
 
