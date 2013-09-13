@@ -34,6 +34,7 @@
     "grunt-contrib-copy": "~0.4.1",
     "grunt-replacer": "~0.1.0",
     "grunt-preprocess": "~3.0.1",
-    "grunt-env": "~0.4.0"
+    "grunt-env": "~0.4.0",
+    "grunt-contrib-jst": "~0.5.1"
   }
 }
