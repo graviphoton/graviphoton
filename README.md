@@ -30,6 +30,12 @@ The project then gets built using ````grunt````. This creates minified css, js a
 grunt
 ````
 
+If running grunt globally does not work for you can use the bundled grunt-cli.
+
+````bash
+node_modules/grunt-cli/bin/grunt
+````
+
 ### Using JST templates
 
 All files in ````src/modules/**/*.tpl```` get compiled to JST templates in ````dist/templates.js````
