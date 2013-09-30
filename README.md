@@ -1,4 +1,6 @@
-## Install
+# Graviphoton [![Build Status](https://travis-ci.org/graviphoton/ui-core.png?branch=master)](https://travis-ci.org/graviphoton/ui-core)
+
+## Hacking
 
 ### Setup machine globally for graviphoton development
 
@@ -28,9 +30,23 @@ The project then gets built using ````grunt````. This creates minified css, js a
 grunt
 ````
 
+### Using JST templates
+
+All files in ````src/modules/**/*.tpl```` get compiled to JST templates in ````dist/templates.js````
+by running ````grunt jst````. The templates may be used with [underscore](http://underscorejs.org/) like so.
+
+````javascript
+var template = JST['core/about']();
+var results = _.template(template, {})
+````
+
 ## Testing
 
-Navigate to ````dist/index.html```` or ````dist/dev.html````.
+Navigate to ````dist/index.html```` or ````dist/dev.html````. The first one contains thte final
+deliverable application that loads minified js and css while the latter loads unminified unconcated
+js and css files.
+
+The subdir ````test/```` contains [QUnit](http://qunitjs.com/) tests that may be run using ````grunt qunit````.
 
 ## Releasing
 
@@ -39,5 +55,4 @@ Running ````grunt```` creates files in ````dist/````.
 ## TODO
 
 * finalize appmodule module and integrate with layout header (need to grok backbone models/sync)
-* create dev.html (using templating and contents of gruntfile)
 * final releng concept

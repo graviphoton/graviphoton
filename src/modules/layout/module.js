@@ -3,21 +3,21 @@
  *
  * @todo integrate AppModule properly so we can display a nice navi in the header.
  */
-Graviphoton.module('Layout', function(Layout, App, Backbone, Marionette, $, _, AppModule, AppModuleCollection) {
+Graviphoton.module('Layout', function(Layout, App, Backbone, Marionette, $, _, JST) {
 
   Layout.Header = Backbone.Marionette.ItemView.extend({
-    template: '#template-header',
+    template: JST['layout/header'],
     initialize: function() {
       //this.listenTo(AppModuleCollection, "change", this.reset);
     }
   });
 
   Layout.Footer = Backbone.Marionette.ItemView.extend({
-    template: '#template-footer',
+    template: JST['layout/footer'],
   });
 
   console.debug('Layout loaded:', this);
-}, Graviphoton.module('AppModule').Model, Graviphoton.module('AppModule').Collection);
+}, JST);
 
 // display header and footer on app start
 Graviphoton.module('Layout').on("start", function(){
@@ -25,5 +25,4 @@ Graviphoton.module('Layout').on("start", function(){
   Graviphoton.footer.show(new Graviphoton.Layout.Footer());
   console.debug('Layout started:', this);
 });
-
 

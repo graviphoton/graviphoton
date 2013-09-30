@@ -16,6 +16,23 @@ module.exports = function(grunt) {
         NODE_ENV: 'production'
       }
     },
+    jst: {
+      templates: {
+        options: {
+          processName: function(name) {
+            // grab src dir location
+            srcPart = grunt.template.process('<%= dirs.src %>');
+            // remove modules part from tpl
+            srcPart += '/modules/';
+            // remove srcPath and ext from name
+            return name.substring(srcPart.length).slice(0, -4);
+          }
+        },
+        files: {
+          '<%= dirs.dest %>/templates.js': [ '<%= dirs.src %>/modules/**/*.tpl' ]
+        }
+      }
+    },
     concat: {
       js: { 
         options: {
@@ -30,6 +47,8 @@ module.exports = function(grunt) {
           '<%= dirs.bower.src %>/backgrid/lib/backgrid.js',
           '<%= dirs.bower.src %>/backgrid/lib/extensions/paginator/backgrid-paginator.js',
           '<%= dirs.bower.src %>/less.js/dist/less-<%= bower.dependencies["less.js"].substr(1) %>.js',
+          '<%= dirs.bower.src %>/bootstrap/dist/js/bootstrap.js',
+          '<%= dirs.dest %>/templates.js',
           '<%= dirs.src %>/graviphoton.js',
           '<%= dirs.src %>/modules/**/*.js'
         ],
@@ -162,10 +181,13 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-env');
   grunt.loadNpmTasks('grunt-preprocess');
+  grunt.loadNpmTasks('grunt-contrib-jst');
 
   grunt.registerTask('test', ['env', 'jshint', 'csslint', 'qunit']);
-  grunt.registerTask('dev', ['env:dev', 'preprocess:dev', 'copy:font_awesome']);
-  grunt.registerTask('prod', ['env:prod', 'preprocess:prod', 'concat', 'copy', 'replacer', 'uglify', 'cssmin']);
+  grunt.registerTask('travis', 'test');
+
+  grunt.registerTask('dev', ['env:dev', 'jst', 'preprocess:dev', 'copy:font_awesome']);
+  grunt.registerTask('prod', ['env:prod', 'jst', 'preprocess:prod', 'concat', 'copy', 'replacer', 'uglify', 'cssmin']);
 
   grunt.registerTask('default', ['test', 'dev', 'prod']);
 };
