@@ -47,7 +47,7 @@ module.exports = function(grunt) {
       dev: {
         NODE_ENV: 'development'
       },
-      /**
+      /*
        * #### production
        *
        * The production env creates concated and minified content
@@ -88,7 +88,8 @@ module.exports = function(grunt) {
      * ### Concat
      *
      * In the concat phase js, css and other files are combined into an unminified
-     * whole. The follwoing formats get concated.
+     * whole. The following formats get concated. Keep in mind that this is the
+     * place you will add new files from modules to the dist files.
      */
     concat: {
       // * js
