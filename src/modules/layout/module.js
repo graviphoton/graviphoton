@@ -1,14 +1,22 @@
-/**
- * Layout Module handles header and footer contents
+/*
+ * # Layout
  *
- * @todo integrate AppModule properly so we can display a nice navi in the header.
+ * handles header and footer contents.
+ *
+ * The layout module takes care of adding some contents to the header and footer
+ * of the page.
  */
-Graviphoton.module('Layout', function(Layout, App, Backbone, Marionette, $, _, JST) {
+Graviphoton.module('Layout', function(Layout, App, Backbone, Marionette, $, _, Graviphoton, JST) {
 
-  Layout.Header = Backbone.Marionette.ItemView.extend({
+  /*
+   * ## Header
+   *
+   * The layout header has a region for the menu.
+   */
+  Layout.Header = Backbone.Marionette.Layout.extend({
     template: JST['layout/header'],
-    initialize: function() {
-      //this.listenTo(AppModuleCollection, "change", this.reset);
+    regions: {
+      menu: "#menu"
     }
   });
 
@@ -16,18 +24,37 @@ Graviphoton.module('Layout', function(Layout, App, Backbone, Marionette, $, _, J
     template: JST['layout/main'],
   });
 
+  /*
+   * ## Footer
+   *
+   * The footer is very simpl and only consists of a template.
+   */
   Layout.Footer = Backbone.Marionette.ItemView.extend({
     template: JST['layout/footer'],
   });
 
-  console.debug('Layout loaded:', this);
-}, JST);
+  /*
+   * ## menuLoaded
+   *
+   * Called when the menu has finished loading.
+   *
+   * @todo replace call with a serious event?
+   */
+  Layout.menuLoaded = function(menu) {
+    this._headerLayout.menu.show(menu);
+  };
 
-// display header and footer on app start
-Graviphoton.module('Layout').on("start", function(){
-  Graviphoton.header.show(new Graviphoton.Layout.Header());
-  Graviphoton.main.show(new Graviphoton.Layout.Main());
-  Graviphoton.footer.show(new Graviphoton.Layout.Footer());
-  console.debug('Layout started:', this);
-});
+  /*
+   * ## Initializer
+   *
+   * Show header and footers.
+   */
+  Layout.addInitializer(function() {
+    this._headerLayout = new Layout.Header();
 
+    Graviphoton.header.show(this._headerLayout);
+    Graviphoton.main.show(new Layout.Main());
+    Graviphoton.footer.show(new Layout.Footer());
+  });
+
+}, Graviphoton, JST);
