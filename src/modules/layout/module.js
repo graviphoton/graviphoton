@@ -12,6 +12,10 @@ Graviphoton.module('Layout', function(Layout, App, Backbone, Marionette, $, _, J
     }
   });
 
+  Layout.Main = Backbone.Marionette.ItemView.extend({
+    template: JST['layout/main'],
+  });
+
   Layout.Footer = Backbone.Marionette.ItemView.extend({
     template: JST['layout/footer'],
   });
@@ -22,6 +26,7 @@ Graviphoton.module('Layout', function(Layout, App, Backbone, Marionette, $, _, J
 // display header and footer on app start
 Graviphoton.module('Layout').on("start", function(){
   Graviphoton.header.show(new Graviphoton.Layout.Header());
+  Graviphoton.main.show(new Graviphoton.Layout.Main());
   Graviphoton.footer.show(new Graviphoton.Layout.Footer());
   console.debug('Layout started:', this);
 });

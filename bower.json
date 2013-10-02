@@ -19,6 +19,8 @@
     "bootstrap": "~3.0.0",
     "less.js": "~1.4.2",
     "font-awesome": "~3.2.1",
-    "jquery": "~2.0.3"
+    "jquery": "~2.0.3",
+    "slickgrid":"2.1",
+    "jquery.event":"https://github.com/threedubmedia/jquery.threedubmedia/archive/2.2.zip"
   }
 }
