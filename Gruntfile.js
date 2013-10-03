@@ -134,7 +134,7 @@ module.exports = function(grunt) {
           '<%= dirs.bower.src %>/slickgrid/slick.grid.css',
           '<%= dirs.bower.src %>/slickgrid/controls/slick.pager.css',
           '<%= dirs.bower.src %>/slickgrid/css/smoothness/jquery-ui-1.8.16.custom.css',
-          '<%= dirs.bower.src %>/slickgrid/examples/examples.css',
+          '<%= dirs.bower.src %>/slickgrid/css/slick-default-theme.css',
           '<%= dirs.bower.src %>/slickgrid/controls/slick.columnpicker.css',
           '<%= dirs.src %>/**/*.css'
         ],
