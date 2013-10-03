@@ -25,21 +25,21 @@ Graviphoton.module('Grid', function(Grid, App, Backbone, Marionette, $, _, JST, 
 
     var functionLookups = {
       "actionBar" : actionBar,
-    }
+    };
 
-    $.getJSON("../entris.json", function(data) {
-       var columns = data['columns'];
-       var data = data['data'];
+    $.getJSON("../entris.json", function(jsonData) {
+       var columns = jsonData.columns;
+       var data = jsonData.data;
 
        // map function names for action bar to real functions
        for (i = 0; i < columns.length; i++) {
          if ("formatter" in columns[i]) {
-           columns[i]['formatter'] = functionLookups[columns[i]['formatter']];
+           columns[i].formatter = functionLookups[columns[i].formatter];
          }
        }
 
        for (i = 0; i < data.length; i++) {
-          data[i]['id'] = 'id_' + i;
+          data[i].id = 'id_' + i;
        }
 
        var dataView = new Slick.Data.DataView({ inlineFilters: true });
@@ -51,14 +51,14 @@ Graviphoton.module('Grid', function(Grid, App, Backbone, Marionette, $, _, JST, 
        // custom filter function
        function columnFilter(item, args) {
          // check title column
-         if (args.searchString != "" && item["KUNDEN_BEZEICHNUNG"].toLowerCase().indexOf(args.searchString.toLowerCase()) == -1) {
+         if (args.searchString !== "" && item.KUNDEN_BEZEICHNUNG.toLowerCase().indexOf(args.searchString.toLowerCase()) == -1) {
            return false;
          }
          return true;
        }
 
        // show pager setting in the right down corner of the grid
-       $(".slick-pager-settings-expanded").show()
+       $(".slick-pager-settings-expanded").show();
 
        // handler when user presses a key in search text box
        $("#searchTextBox").keyup(function (e) {
@@ -101,7 +101,7 @@ Graviphoton.module('Grid', function(Grid, App, Backbone, Marionette, $, _, JST, 
          grid.render();
        });
 
-       dataView.beginUpdate()
+       dataView.beginUpdate();
        dataView.setItems(data);
        dataView.setFilterArgs({
          searchString: ""
@@ -110,7 +110,7 @@ Graviphoton.module('Grid', function(Grid, App, Backbone, Marionette, $, _, JST, 
        // set row filter when entering a search key into search text box.
        dataView.setFilter(columnFilter);
 
-       dataView.endUpdate()
+       dataView.endUpdate();
        dataView.syncGridSelection(grid, true);
     });
   };
