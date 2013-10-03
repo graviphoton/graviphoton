@@ -123,12 +123,33 @@ Graviphoton.module('Grid', function(Grid, App, Backbone, Marionette, $, _, JST, 
   });
 
   /*
-   * ## Initializer
+   * ## Router
    */
-  Grid.addInitializer(function() {
-    mainRegion.show(new Grid.MainView());
-    Grid.mainAction();
+  Grid.Router = Marionette.AppRouter.extend({
+    appRoutes: {
+      'grid': 'showGrid'
+    }
   });
 
+  /*
+   * ## Controller
+   */
+  Grid.Controller = Marionette.Controller.extend({
+    showGrid: function() {
+      mainRegion.show(new Grid.MainView());
+      Grid.mainAction();
+    }
+  });
+
+  /*
+   * ## Initializer
+   *
+   * fire up a router/controller combo
+   */
+  Grid.addInitializer(function() {
+    new Grid.Router({
+      controller: new Grid.Controller()
+    });
+  });
 
 }, JST, Graviphoton.main);
