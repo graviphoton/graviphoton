@@ -13,11 +13,7 @@ Graviphoton.module('Grid', function(Grid, App, Backbone, Marionette, $, _, JST, 
   Grid.mainAction = function() {
     function actionBar(row,cell,value,columnDef,dataContext) {
       // the id is so that you can identify the row when the particular button is clicked
-      var button = "<input type='button' value='Button' id='" + dataContext.id + '0' + "'>";
-      var checkbox = "<input type='checkbox' value='Checkbox' id='" + dataContext.id + '1' + "'>"
-      var html = "<a href='http://www.swisscom.ch' id='" + dataContext.id + '2' + "'>" + "swisscom</a>";
-
-      return button + checkbox + html;
+      return JST['grid/actionBar']({ id: dataContext.id });
     }
 
     var options = {
