@@ -8,11 +8,7 @@
     <a class="navbar-brand" href="#">Graviphoton</a>
   </div>
   <div class="navbar-collapse">
-    <ul class="nav navbar-nav">
-      <% /*console.log(this); _.each(modules, function(module) { %>
-        <li><%= module.moduleName %></li>
-      <% });*/ %>
-    </ul>
+    <span id="menu"></span>
     <ul class="nav navbar-nav navbar-right">
       <li><a href="#"><i class="icon-user"></i></a></li>
       <li><a href="#"><i class="icon-bell"></i></a></li>
