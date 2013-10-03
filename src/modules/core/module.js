@@ -6,18 +6,36 @@
  */
 Graviphoton.module('Core', function(Core, App, Backbone, Marionette, $, _, JST, mainRegion) {
 
+  /*
+   * ## WelcomeView
+   *
+   * preliminiary contents of welcome page.
+   */
   Core.WelcomeView = Backbone.Marionette.ItemView.extend({
     template: JST['core/welcome']
   });
 
+  /*
+   * ## AboutView
+   *
+   * Page you get to see when the user hits about.
+   */
   Core.AboutView = Backbone.Marionette.ItemView.extend({
     template: JST['core/about']
   });
 
-  Core.404View = Backbone.Marionette.ItemView.extend({
+  /*
+   * ## FourOhFourView
+   *
+   * run off the mill 404 page
+   */
+  Core.FourOhFourView = Backbone.Marionette.ItemView.extend({
     template: JST['core/404']
   });
 
+  /*
+   * ## Controller
+   */
   Core.Controller = Marionette.Controller.extend({
     showWelcome: function() {
       mainRegion.show(new Core.WelcomeView());
@@ -26,10 +44,13 @@ Graviphoton.module('Core', function(Core, App, Backbone, Marionette, $, _, JST, 
       mainRegion.show(new Core.AboutView());
     },
     show404: function() {
-      mainRegion.show(new Core.404View());
+      mainRegion.show(new Core.FourOhFourView());
     }
   });
 
+  /*
+   * ## Router
+   */
   Core.Router = Marionette.AppRouter.extend({
     appRoutes: {
       '': 'showWelcome',
@@ -38,6 +59,9 @@ Graviphoton.module('Core', function(Core, App, Backbone, Marionette, $, _, JST, 
     }
   });
 
+  /*
+   * ## Initializer
+   */
   Core.addInitializer(function() {
     new Core.Router({
       controller: new Core.Controller()
