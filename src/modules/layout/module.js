@@ -20,10 +20,6 @@ Graviphoton.module('Layout', function(Layout, App, Backbone, Marionette, $, _, G
     }
   });
 
-  Layout.Main = Backbone.Marionette.ItemView.extend({
-    template: JST['layout/main'],
-  });
-
   /*
    * ## Footer
    *
@@ -53,7 +49,6 @@ Graviphoton.module('Layout', function(Layout, App, Backbone, Marionette, $, _, G
     this._headerLayout = new Layout.Header();
 
     Graviphoton.header.show(this._headerLayout);
-    Graviphoton.main.show(new Layout.Main());
     Graviphoton.footer.show(new Layout.Footer());
   });
 
