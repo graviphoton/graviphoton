@@ -1,0 +1,53 @@
+
+.table > .slick-header > .slick-header-columns > .slick-header-column,
+.table > .slick-viewport > .grid-canvas > .slick-row > .slick-cell {
+  padding: 8px;
+  line-height: 1.428571429;
+  vertical-align: top;
+  border-top: 1px solid #dddddd;
+  border-right: 1px dotted silver;
+}
+
+.table > .slick-header > .slick-header-columns > .slick-header-column:last-child {
+  border-right: 0;
+}
+
+.table > .slick-header > .slick-header-columns > .slick-header-column {
+  font-weight: bold;
+  font-size: 100%;
+  vertical-align: bottom;
+  border-top: 0;
+  border-bottom: 2px solid #dddddd;
+}
+
+.table > .slick-header > .slick-header-columns > .ui-state-default {
+  height: auto;
+}
+
+.table > .slick-viewport + .slick-viewport {
+  border-top: 2px solid #dddddd;
+}
+
+.table > .slick-viewport > .grid-canvas > .slick-row {
+  border-bottom: 1px solid #dddddd;
+}
+
+.table > .slick-viewport > .grid-canvas > .slick-row:last-child {
+  border-bottom: 0;
+}
+
+
+.table > .slick-viewport > .grid-canvas > .slick-row > .slick-cell {
+  border-right: 0;
+  border-top: 0;
+  border-bottom: 0;
+  height: 37px;
+}
+.table > .slick-viewport > .grid-canvas > .slick-row > .slick-cell:last-child {
+  border-right: 0;
+}
+
+.panel-footer > .slick-pager {
+  border: 0;
+  background: transparent;
+}

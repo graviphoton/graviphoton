@@ -1,8 +1,8 @@
-<div class="grid-header" style="width:100%">
-  <label>SlickGrid Demo</label>
+<div class="panel panel-default">
+  <div class="panel-heading">SlickGrid Demo</div>
+  <div id="searchField" class="panel-body">
+    <input type="text" id="searchTextBox" class="form-control" placeholder="Search">
+  </div>
+  <div id="myGrid" class="table"></div>
+  <div id="pager" class="panel-footer"></div>
 </div>
-<div id="searchField" class="grid-header" style="background:#dddddd;padding:3px;color:black;">
-  Search: <input type="text" id="searchTextBox">
-</div>
-<div id="myGrid" style="width:100%;height:500px;"></div>
-<div id="pager" style="width:100%;height:20px;"></div>
