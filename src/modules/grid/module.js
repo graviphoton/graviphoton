@@ -4,7 +4,7 @@
  * Module containing basic grid components.
  *
  */
-Graviphoton.module('Grid', function(Grid, App, Backbone, Marionette, $, _, JST, mainRegion) {
+Graviphoton.module('Grid', function(Grid, App, Backbone, Marionette, $, _, JST, mainRegion, Slick) {
 
   /*
    * ## mainAction
@@ -18,9 +18,11 @@ Graviphoton.module('Grid', function(Grid, App, Backbone, Marionette, $, _, JST, 
 
     var options = {
       enableCellNavigation: true,
-       enableColumnReorder: false,
-      forceFitColumns: false,
-      topPanelHeight: 30
+      enableColumnReorder: false,
+      forceFitColumns: true,
+      autoHeight: true,
+      fullWidthRows: true,
+      rowHeight: 37
     };
 
     var functionLookups = {
@@ -136,8 +138,8 @@ Graviphoton.module('Grid', function(Grid, App, Backbone, Marionette, $, _, JST, 
    */
   Grid.Controller = Marionette.Controller.extend({
     showGrid: function() {
-      mainRegion.show(new Grid.MainView());
       Grid.mainAction();
+      mainRegion.show(new Grid.MainView());
     }
   });
 
@@ -152,4 +154,4 @@ Graviphoton.module('Grid', function(Grid, App, Backbone, Marionette, $, _, JST, 
     });
   });
 
-}, JST, Graviphoton.main);
+}, JST, Graviphoton.main, Slick);
