@@ -1,4 +1,8 @@
 
+.grid {
+  min-height: 410px;
+}
+
 .table > .slick-header > .slick-header-columns > .slick-header-column,
 .table > .slick-viewport > .grid-canvas > .slick-row > .slick-cell {
   padding: 8px;

@@ -4,6 +4,6 @@
   <div id="searchField" class="panel-body">
     <input type="text" id="searchTextBox" class="form-control" placeholder="Search">
   </div>
-  <div id="myGrid" class="table"></div>
-  <div id="pager" class="panel-footer"></div>
+  <div id="myGrid" class="table grid"></div>
+  <div class="panel-footer grid-pager"></div>
 </div>

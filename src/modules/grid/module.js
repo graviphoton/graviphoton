@@ -20,7 +20,7 @@ Graviphoton.module('Grid', function(Grid, App, Backbone, Marionette, $, _, JST, 
       enableCellNavigation: true,
       enableColumnReorder: false,
       forceFitColumns: true,
-      autoHeight: true,
+      autoHeight: false,
       fullWidthRows: true,
       rowHeight: 37
     };
@@ -44,9 +44,14 @@ Graviphoton.module('Grid', function(Grid, App, Backbone, Marionette, $, _, JST, 
           data[i].id = 'id_' + i;
        }
 
-       var dataView = new Slick.Data.DataView({ inlineFilters: true });
+       var dataView = new Slick.Data.DataView({ inlineFilters: true});
+       dataView.setPagingOptions({
+         pageSize: 10
+       });
        var grid = new Slick.Grid("#myGrid", dataView, columns, options);
-       var pager = new Slick.Controls.Pager(dataView, grid, $("#pager"));
+       Grid.pager.show(new Grid.Pager({
+         dataView: dataView
+       }));
        grid.setSelectionModel(new Slick.RowSelectionModel());
        grid.autosizeColumns();
  
@@ -58,9 +63,6 @@ Graviphoton.module('Grid', function(Grid, App, Backbone, Marionette, $, _, JST, 
          }
          return true;
        }
-
-       // show pager setting in the right down corner of the grid
-       $(".slick-pager-settings-expanded").show();
 
        // handler when user presses a key in search text box
        $("#searchTextBox").keyup(function (e) {
@@ -118,10 +120,87 @@ Graviphoton.module('Grid', function(Grid, App, Backbone, Marionette, $, _, JST, 
   };
 
   /*
+   * ## Pager
+   *
+   * Replacement for Slick.Controls.Pager so we can style this our own way.
+   * This was implemented this way since the SlickGrid pager is not easily
+   * customizable while not containing much login anyhow.
+   */
+  Grid.Pager = Backbone.Marionette.ItemView.extend({
+    template: JST['grid/pager'],
+    initialize: function() {
+      var that = this;
+      this.dataView = this.options.dataView || console.error('No dataView in Grid.Pager');
+      this.dataView.onRowCountChanged.subscribe(function (e, args) {
+        that.render();
+      });
+      this.dataView.onRowsChanged.subscribe(function (e, args) {
+        that.render();
+      });
+    },
+    serializeData: function() {
+      return this.getNavState();
+    },
+    events: {
+      "click .btn-pagesize": "setPageSize",
+      "click .btn-first": "gotoFirst",
+      "click .btn-prev": "gotoPrev",
+      "click .btn-next": "gotoNext",
+      "click .btn-last": "gotoLast",
+    },
+    setPageSize: function(event) {
+      var size = parseInt(event.toElement.getAttribute('data'))
+      this.dataView.setRefreshHints({
+        isFilterUnchanged: true
+      });
+      this.dataView.setPagingOptions({pageSize: size});
+    },
+    gotoFirst: function() {
+      if (this.getNavState().canGotoFirst) {
+        this.dataView.setPagingOptions({pageNum: 0});
+      }
+    },
+    gotoPrev: function() {
+      var state = this.getNavState();
+      if (state.canGotoPrev) {
+        this.dataView.setPagingOptions({pageNum: state.pagingInfo.pageNum - 1});
+      }
+    },
+    gotoNext: function() {
+      var state = this.getNavState();
+      if (state.canGotoNext) {
+        this.dataView.setPagingOptions({pageNum: state.pagingInfo.pageNum + 1});
+      }
+    },
+    gotoLast: function() {
+      var state = this.getNavState();
+      if (state.canGotoLast) {
+        this.dataView.setPagingOptions({pageNum: state.pagingInfo.totalPages - 1});
+      }
+    },
+    getNavState: function() {
+      var cannotLeaveEditMode = !Slick.GlobalEditorLock.commitCurrentEdit();
+      var pagingInfo = this.dataView.getPagingInfo();
+      var lastPage = pagingInfo.totalPages - 1;
+
+      return {
+        canGotoFirst: !cannotLeaveEditMode && pagingInfo.pageSize != 0 && pagingInfo.pageNum > 0,
+        canGotoLast: !cannotLeaveEditMode && pagingInfo.pageSize != 0 && pagingInfo.pageNum != lastPage,
+        canGotoPrev: !cannotLeaveEditMode && pagingInfo.pageSize != 0 && pagingInfo.pageNum > 0,
+        canGotoNext: !cannotLeaveEditMode && pagingInfo.pageSize != 0 && pagingInfo.pageNum < lastPage,
+        pagingInfo: pagingInfo
+      }
+    },
+  });
+
+  /*
    * ## MainView
    */
-  Grid.MainView = Backbone.Marionette.ItemView.extend({
+  Grid.MainView = Backbone.Marionette.Layout.extend({
     template: JST['grid/main'],
+    regions: {
+      pager: ".grid-pager"
+    }
   });
 
   /*
@@ -138,8 +217,10 @@ Graviphoton.module('Grid', function(Grid, App, Backbone, Marionette, $, _, JST, 
    */
   Grid.Controller = Marionette.Controller.extend({
     showGrid: function() {
+      var view = new Grid.MainView();
+      Grid.pager = view.pager;
       Grid.mainAction();
-      mainRegion.show(new Grid.MainView());
+      mainRegion.show(view);
     }
   });
 
