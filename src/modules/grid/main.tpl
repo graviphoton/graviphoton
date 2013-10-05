@@ -1,3 +1,4 @@
+<script type="text/javascript">document.title="SlickGrid Demo";</script>
 <div class="panel panel-default">
   <div class="panel-heading">SlickGrid Demo</div>
   <div id="searchField" class="panel-body">
