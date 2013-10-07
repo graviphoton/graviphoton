@@ -12,7 +12,7 @@
     <% if (pagingInfo.pageSize === 0) { %>
       Showing all <%= pagingInfo.totalRows %> rows
     <% } else { %>
-      Showing page <%= pagingInfo.pageNum + 1 %> of <%= pagingInfo.totalPages %>
+      Showing page <%= pagingInfo.pageNum %> of <%= pagingInfo.totalPages %>
     <% } %>
   </div>
   <div class="btn-group btn-group-xs navbar-right">
