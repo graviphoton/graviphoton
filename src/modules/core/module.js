@@ -7,12 +7,24 @@
 Graviphoton.module('Core', function(Core, App, Backbone, Marionette, $, _, JST, mainRegion) {
 
   /*
+   * ## AppDrawerView
+   *
+   * Display an app in the apps drawer.
+   */
+  Core.AppDrawerView = Backbone.Marionette.ItemView.extend({
+    template: JST['core/app/drawer']
+  });
+
+  /*
    * ## WelcomeView
    *
-   * preliminiary contents of welcome page.
+   * contains some boilerplate contents as well as a drawer full
+   * of configured apps.
    */
-  Core.WelcomeView = Backbone.Marionette.ItemView.extend({
-    template: JST['core/welcome']
+  Core.WelcomeView = Backbone.Marionette.CompositeView.extend({
+    template: JST['core/welcome'],
+    itemView: Core.AppDrawerView,
+    itemViewContainer: ".apps",
   });
 
   /*
@@ -32,13 +44,43 @@ Graviphoton.module('Core', function(Core, App, Backbone, Marionette, $, _, JST, 
   Core.FourOhFourView = Backbone.Marionette.ItemView.extend({
     template: JST['core/404']
   });
+  /*
+   * ## AppModel
+   *
+   * The core app model contains whats needed to setup graviphoton apps.
+   */
+  Core.AppModel = Backbone.Model.extend({
+    defaults: {
+      name: "Not specified",
+      title: "Not specified",
+      description: "",
+      showInMenu: false,
+      showInDrawer: false
+    }
+  });
+
+  /*
+   * ## AppCollection
+   */
+  Core.AppCollection = Backbone.Collection.extend({
+    model: Core.AppModel,
+    url: '../data.json'
+  });
 
   /*
    * ## Controller
    */
   Core.Controller = Marionette.Controller.extend({
     showWelcome: function() {
-      mainRegion.show(new Core.WelcomeView());
+      appCollection = new Core.AppCollection();
+      appCollection.fetch({
+        success: function(data) {
+          var welcomeView = new Core.WelcomeView({
+            collection: data
+          });
+          mainRegion.show(welcomeView);
+        }
+      });
     },
     showAbout: function() {
       mainRegion.show(new Core.AboutView());

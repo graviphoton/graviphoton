@@ -1,45 +1,25 @@
 /*
  * # Menu
  *
- * Create the following file as menu.json in the projects root for test
+ * Create the following file as data.json in the projects root for test
  * purposes.
  *
  * ````javascript
  * [
  *   {
  *     "name":"core",
- *     "title":"Core"
+ *     "title":"Core",
+ *     "showInMenu":true
  *   },
  *   {
  *     "name":"admin",
- *     "title":"Administration"
+ *     "title":"Administration",
+ *     "showInMenu":true
  *   }
  * ]
  * ````
  */
-Graviphoton.module('Menu', function(Menu, App, Backbone, Marionette, $, _, JST, Layout) {
-
-  /*
-   * ## Item 
-   */
-  Menu.Item = Backbone.Model.extend({
-    defaults: {
-      name: "Not specified",
-      title: "Not specified"
-    },
-  });
-
-  /*
-   * ## ItemCollection
-   * 
-   * collection of items to be displayed as part of the menu tree.
-   *
-   * @todo replace url with a service
-   */
-  Menu.ItemCollection = Backbone.Collection.extend({
-    model: Menu.Item,
-    url: '../menu.json',
-  });
+Graviphoton.module('Menu', function(Menu, App, Backbone, Marionette, $, _, JST, Layout, CoreAppCollection, CoreFilteredCollection) {
 
   /*
    * ## ItemView
@@ -74,7 +54,9 @@ Graviphoton.module('Menu', function(Menu, App, Backbone, Marionette, $, _, JST, 
     className: 'nav navbar-nav',
     initialize: function() {
       var errorHandle = this.options.error || console.error;
-      this.collection = this.options.collection || console.error('Please pass a collection to Menu.View.');
+      this.collection = this.options.collection || console.error("Please pass a collection to Menu.View.");
+
+      this.collection.on("reset", this.render, this);
 
       this.collection.fetch({
         success: this.options.loaded(this),
@@ -88,12 +70,11 @@ Graviphoton.module('Menu', function(Menu, App, Backbone, Marionette, $, _, JST, 
    */
   Menu.addInitializer(function() {
     new Menu.View({
-      collection: new Menu.ItemCollection(),
+      collection: new CoreAppCollection(),
       loaded: function(menu) {
-        // @todo use events rather than this
         Layout.menuLoaded(menu);
       }
     });
   });
 
-}, JST, Graviphoton.module('Layout'));
+}, JST, Graviphoton.module('Layout'), Graviphoton.module('Core').AppCollection, Graviphoton.module('Core').FilteredCollection);
