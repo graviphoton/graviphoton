@@ -62,7 +62,9 @@ module.exports = function(grunt) {
      * Use bower to install prebuilt libs.
      */
     bower: {
-      install: {}
+      install: {
+        copy: false
+      }
     },
     /*
      * ### JST
