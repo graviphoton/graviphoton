@@ -344,11 +344,15 @@ module.exports = function(grunt) {
 
   /*
    * ## Tasks
+   * ### prepare
+   */
+  grunt.registerTask('prepare', ['bower']);
+  /*
    * ### test
    *
    * Runs the testsuites.
    */
-  grunt.registerTask('test', ['bower', 'env', 'jshint', 'csslint', 'prod', 'qunit']);
+  grunt.registerTask('test', ['env', 'jshint', 'csslint', 'prod', 'qunit']);
   /*
    * ### travis
    *
@@ -360,17 +364,23 @@ module.exports = function(grunt) {
    *
    * Create development artefacts like dist/dev.html.
    */
-  grunt.registerTask('dev', ['bower', 'env:dev', 'jst', 'preprocess:dev', 'copy:font_awesome']);
+  grunt.registerTask('dev', ['env:dev', 'jst', 'preprocess:dev', 'copy:font_awesome']);
   /*
    * ### prod
    *
    * Create production artefacts like dist/index.html.
    */
-  grunt.registerTask('prod', ['bower', 'env:prod', 'jst', 'preprocess:prod', 'concat', 'copy', 'replacer', 'uglify', 'cssmin']);
+  grunt.registerTask('prod', ['env:prod', 'jst', 'preprocess:prod', 'concat', 'copy', 'replacer']);
+  /*
+   * ### min
+   *
+   * run uglifier and minifier.
+   */
+  grunt.registerTask('min', ['uglify', 'cssmin']);
   /*
    * ### default
    *
    * Run all the things if noone specifed.
    */
-  grunt.registerTask('default', ['test', 'dev', 'prod']);
+  grunt.registerTask('default', ['test', 'dev', 'prod', 'min']);
 };
