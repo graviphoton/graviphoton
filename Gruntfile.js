@@ -20,7 +20,7 @@ module.exports = function(grunt) {
      * and bower later in this initConfig directive.
      */
     pkg: grunt.file.readJSON('package.json'),
-    bower: grunt.file.readJSON('bower.json'),
+    bowerJson: grunt.file.readJSON('bower.json'),
     /*
      * ### Dirs
      *
@@ -55,6 +55,14 @@ module.exports = function(grunt) {
       prod: {
         NODE_ENV: 'production'
       }
+    },
+    /*
+     * ### Bower
+     *
+     * Use bower to install prebuilt libs.
+     */
+    bower: {
+      install: {}
     },
     /*
      * ### JST
@@ -107,7 +115,7 @@ module.exports = function(grunt) {
           '<%= dirs.bower.src %>/backbone.bootstrap-modal/src/backbone.bootstrap-modal.js',
           '<%= dirs.bower.src %>/backgrid/lib/backgrid.js',
           '<%= dirs.bower.src %>/backgrid/lib/extensions/paginator/backgrid-paginator.js',
-          '<%= dirs.bower.src %>/less.js/dist/less-<%= bower.dependencies["less.js"].substr(1) %>.js',
+          '<%= dirs.bower.src %>/less.js/dist/less-<%= bowerJson.dependencies["less.js"].substr(1) %>.js',
           '<%= dirs.bower.src %>/bootstrap/dist/js/bootstrap.js',
           '<%= dirs.bower.src %>/slickgrid/slick.*.js',
           '<%= dirs.bower.src %>/slickgrid/controls/slick.*.js',
@@ -329,6 +337,8 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-preprocess');
   // - jst: javascript template compiler
   grunt.loadNpmTasks('grunt-contrib-jst');
+  // - bower: bower package manager
+  grunt.loadNpmTasks('grunt-bower-task');
 
   /*
    * ## Tasks
@@ -336,7 +346,7 @@ module.exports = function(grunt) {
    *
    * Runs the testsuites.
    */
-  grunt.registerTask('test', ['env', 'jshint', 'csslint', 'prod', 'qunit']);
+  grunt.registerTask('test', ['bower', 'env', 'jshint', 'csslint', 'prod', 'qunit']);
   /*
    * ### travis
    *
@@ -348,13 +358,13 @@ module.exports = function(grunt) {
    *
    * Create development artefacts like dist/dev.html.
    */
-  grunt.registerTask('dev', ['env:dev', 'jst', 'preprocess:dev', 'copy:font_awesome']);
+  grunt.registerTask('dev', ['bower', 'env:dev', 'jst', 'preprocess:dev', 'copy:font_awesome']);
   /*
    * ### prod
    *
    * Create production artefacts like dist/index.html.
    */
-  grunt.registerTask('prod', ['env:prod', 'jst', 'preprocess:prod', 'concat', 'copy', 'replacer', 'uglify', 'cssmin']);
+  grunt.registerTask('prod', ['bower', 'env:prod', 'jst', 'preprocess:prod', 'concat', 'copy', 'replacer', 'uglify', 'cssmin']);
   /*
    * ### default
    *
