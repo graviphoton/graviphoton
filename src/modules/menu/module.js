@@ -1,8 +1,10 @@
 /*
  * # Menu
  *
- * Create the following file as menu.json in the projects root for test
- * purposes.
+ * Grabs the installed apps from /core/app and displays the ones with
+ * the showInMenu Flag active.
+ *
+ * showInMenu should return something like the following.
  *
  * ````javascript
  * [
@@ -16,6 +18,8 @@
  *   }
  * ]
  * ````
+ *
+ * @todo make this module grab the apps location via RESTful disco from /
  */
 Graviphoton.module('Menu', function(Menu, App, Backbone, Marionette, $, _, JST, Layout) {
 
@@ -38,7 +42,7 @@ Graviphoton.module('Menu', function(Menu, App, Backbone, Marionette, $, _, JST, 
    */
   Menu.ItemCollection = Backbone.Collection.extend({
     model: Menu.Item,
-    url: '../menu.json',
+    url: '/core/app',
   });
 
   /*
