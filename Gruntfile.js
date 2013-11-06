@@ -344,6 +344,7 @@ module.exports = function(grunt) {
 
   /*
    * ## Tasks
+   * @todo this section needs some work to get rid of duplicate calls
    * ### prepare
    */
   grunt.registerTask('prepare', ['bower']);
@@ -352,25 +353,25 @@ module.exports = function(grunt) {
    *
    * Runs the testsuites.
    */
-  grunt.registerTask('test', ['env', 'jshint', 'csslint', 'prod', 'qunit']);
+  grunt.registerTask('test', ['env', 'prepare', 'jshint', 'csslint', 'prod', 'qunit']);
   /*
    * ### travis
    *
    * Hook for http://travis-ci.org
    */
-  grunt.registerTask('travis', 'test');
+  grunt.registerTask('travis', ['prepare', 'test']);
   /*
    * ### dev
    *
    * Create development artefacts like dist/dev.html.
    */
-  grunt.registerTask('dev', ['env:dev', 'jst', 'preprocess:dev', 'copy:font_awesome']);
+  grunt.registerTask('dev', ['env:dev', 'prepare', 'jst', 'preprocess:dev', 'copy:font_awesome']);
   /*
    * ### prod
    *
    * Create production artefacts like dist/index.html.
    */
-  grunt.registerTask('prod', ['env:prod', 'jst', 'preprocess:prod', 'concat', 'copy', 'replacer']);
+  grunt.registerTask('prod', ['env:prod', 'prepare', 'jst', 'preprocess:prod', 'concat', 'copy', 'replacer']);
   /*
    * ### min
    *
@@ -382,5 +383,5 @@ module.exports = function(grunt) {
    *
    * Run all the things if noone specifed.
    */
-  grunt.registerTask('default', ['test', 'dev', 'prod', 'min']);
+  grunt.registerTask('default', ['prepare', 'test', 'dev', 'prod', 'min']);
 };
