@@ -60,6 +60,8 @@ module.exports = function(grunt) {
      * ### Bower
      *
      * Use bower to install prebuilt libs.
+     *
+     * @todo fix and reactivate (for some reason this does not work)
      */
     bower: {
       install: {
@@ -340,14 +342,14 @@ module.exports = function(grunt) {
   // - jst: javascript template compiler
   grunt.loadNpmTasks('grunt-contrib-jst');
   // - bower: bower package manager
-  grunt.loadNpmTasks('grunt-bower-task');
+  //grunt.loadNpmTasks('grunt-bower-task');
 
   /*
    * ## Tasks
    * @todo this section needs some work to get rid of duplicate calls
    * ### prepare
    */
-  grunt.registerTask('prepare', ['bower']);
+  grunt.registerTask('prepare', []);
   /*
    * ### test
    *
