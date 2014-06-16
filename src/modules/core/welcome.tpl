@@ -7,5 +7,5 @@
   <li>backbone.marionette</li>
   <li>twitter-bootstrap</li>
   <li>font-awesome</li>
-  <li>SlickGrid</li>
+  <li>backgrid.js</li>
 <ul>

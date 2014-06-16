@@ -1,238 +1,143 @@
-/*
+/**
  * # Grid
  *
- * Module containing basic grid components.
+ * Module containg basic grid
  *
  */
-Graviphoton.module('Grid', function(Grid, App, Backbone, Marionette, $, _, JST, mainRegion, Slick) {
+Graviphoton.module('Grid', function(Grid, App, Backbone, Marionette, $, _, JST, mainRegion) {
+  Grid.url = '';
 
-  /*
-   * ## mainAction
-   *
-   */
-  Grid.mainAction = function() {
-    function actionBar(row,cell,value,columnDef,dataContext) {
-      // the id is so that you can identify the row when the particular button is clicked
-      return JST['grid/actionBar']({ id: dataContext.id });
-    }
+  Grid.Model = Backbone.Model.extend({});
 
-    var options = {
-      enableCellNavigation: true,
-      enableColumnReorder: false,
-      forceFitColumns: true,
-      autoHeight: false,
-      fullWidthRows: true,
-      rowHeight: 37
-    };
+  Grid.Collection = Backbone.PageableCollection.extend({
+    model: Grid.Model,
+    url: function() {
+      return '/'+Grid.url;
+    },
+    mode: 'server',
+    queryParams: {
+      currentPage: 'page',
+      pageSize: null
+    },
+    parseState: function(records, queryParams, state, options) {
+      var links = this.parseLinks(records, options);
+      var newState = _.clone(state);
 
-    var functionLookups = {
-      "actionBar" : actionBar,
-    };
+      if (links.self) {
+        newState.currentPage = parseInt(this.parseUrl(links.self).query.page, 10);
+      }
+      if (links.first) {
+        newState.firstPage = parseInt(this.parseUrl(links.first).query.page, 10);
+      }
+      if (links.last) {
+        newState.lastPage = parseInt(this.parseUrl(links.last).query.page, 10);
+        newState.totalPages = newState.lastPage;
+      }
+      newState.pageSize = 10;
 
-    $.getJSON("../entris.json", function(jsonData) {
-       var columns = jsonData.columns;
-       var data = jsonData.data;
+      return newState;
+    },
+    parseLinks: function(resp, options) {
+      // copy of original with added 'last' and 'self' relationship
+      var links = {};
+      var linkHeader = options.xhr.getResponseHeader("Link");
+      if (linkHeader) {
+        var relations = ["first", "prev", "next", "last", "self"];
+        _.each(linkHeader.split(","), function (linkValue) {
+          var linkParts = linkValue.split(";");
+          var url = linkParts[0].replace(/[<>\s'"]/g, '');
+          var params = linkParts.slice(1);
+          _.each(params, function (param) {
+            var paramParts = param.split("=");
+            var key = paramParts[0].replace(/['" ]/g, '');
+            var value = paramParts[1].replace(/['"]/g, '');
+            if (key == "rel" && _.contains(relations, value)) links[value] = url;
+          });
+        });
+      }
 
-       // map function names for action bar to real functions
-       for (i = 0; i < columns.length; i++) {
-         if ("formatter" in columns[i]) {
-           columns[i].formatter = functionLookups[columns[i].formatter];
-         }
-       }
+      return links;
+    },
+    parseUrl: function(url) {
+      var query = [];
 
-       for (i = 0; i < data.length; i++) {
-          data[i].id = 'id_' + i;
-       }
+      var parser = document.createElement('a');
+      parser.href = url;
 
-       var dataView = new Slick.Data.DataView({ inlineFilters: true});
-       dataView.setPagingOptions({
-         pageSize: 10
-       });
-       var grid = new Slick.Grid("#myGrid", dataView, columns, options);
-       Grid.pager.show(new Grid.Pager({
-         dataView: dataView
-       }));
-       grid.setSelectionModel(new Slick.RowSelectionModel());
-       grid.autosizeColumns();
- 
-       // custom filter function
-       function columnFilter(item, args) {
-         // check title column
-         if (args.searchString !== "" && item.KUNDEN_BEZEICHNUNG.toLowerCase().indexOf(args.searchString.toLowerCase()) == -1) {
-           return false;
-         }
-         return true;
-       }
-
-       // handler when user presses a key in search text box
-       $("#searchTextBox").keyup(function (e) {
-         Slick.GlobalEditorLock.cancelCurrentEdit();
-
-         // clear on Esc
-         if (e.which == 27) {
-           this.value = "";
-         }
-
-         dataView.setFilterArgs({
-           searchString: this.value
-         });
-         dataView.refresh();
-       });
-
-       // our native compare functions for column KUNDEN_BEZEICHNUNG
-       function comparer(a, b) {
-         var x = a[sortcol], y = b[sortcol];
-         return (x == y ? 0 : (x > y ? 1 : -1));
-       }
-
-       // sort event when clicking with mouse on a column title
-       grid.onSort.subscribe(function (e, args) {
-         sortcol = args.sortCol.field;
-
-         // can be very slow in IE with huge datasets
-         dataView.sort(comparer, args.sortAsc);
-       });
-
-       // dataView.setItems() fires onRowCountChanged event to display the rows
-       dataView.onRowCountChanged.subscribe(function (e, args) {
-         grid.updateRowCount();
-         grid.render();
-       });
-
-       // display new rows when paging
-       dataView.onRowsChanged.subscribe(function (e, args) {
-         grid.invalidateRows(args.rows);
-         grid.render();
-       });
-
-       dataView.beginUpdate();
-       dataView.setItems(data);
-       dataView.setFilterArgs({
-         searchString: ""
-       });
-
-       // set row filter when entering a search key into search text box.
-       dataView.setFilter(columnFilter);
-
-       dataView.endUpdate();
-       dataView.syncGridSelection(grid, true);
-    });
-  };
-
-  /*
-   * ## Pager
-   *
-   * Replacement for Slick.Controls.Pager so we can style this our own way.
-   * This was implemented this way since the SlickGrid pager is not easily
-   * customizable while not containing much login anyhow.
-   */
-  Grid.Pager = Backbone.Marionette.ItemView.extend({
-    template: JST['grid/pager'],
-    initialize: function() {
-      var that = this;
-      this.dataView = this.options.dataView || console.error('No dataView in Grid.Pager');
-      this.dataView.onRowCountChanged.subscribe(function (e, args) {
-        that.render();
+      var queryString = parser.search.substring(1);
+      _.each(queryString.split('&'), function (queryPart) {
+        var queryParts = queryPart.split('=');
+        query[queryParts[0]] = queryParts[1];
       });
-      this.dataView.onRowsChanged.subscribe(function (e, args) {
-        that.render();
-      });
-    },
-    serializeData: function() {
-      return this.getNavState();
-    },
-    events: {
-      "click .btn-pagesize": "setPageSize",
-      "click .btn-first": "gotoFirst",
-      "click .btn-prev": "gotoPrev",
-      "click .btn-next": "gotoNext",
-      "click .btn-last": "gotoLast",
-    },
-    setPageSize: function(event) {
-      var size = parseInt(event.toElement.getAttribute('data'), 10);
-      this.dataView.setRefreshHints({
-        isFilterUnchanged: true
-      });
-      this.dataView.setPagingOptions({pageSize: size});
-    },
-    gotoFirst: function() {
-      if (this.getNavState().canGotoFirst) {
-        this.dataView.setPagingOptions({pageNum: 0});
-      }
-    },
-    gotoPrev: function() {
-      var state = this.getNavState();
-      if (state.canGotoPrev) {
-        this.dataView.setPagingOptions({pageNum: state.pagingInfo.pageNum - 1});
-      }
-    },
-    gotoNext: function() {
-      var state = this.getNavState();
-      if (state.canGotoNext) {
-        this.dataView.setPagingOptions({pageNum: state.pagingInfo.pageNum + 1});
-      }
-    },
-    gotoLast: function() {
-      var state = this.getNavState();
-      if (state.canGotoLast) {
-        this.dataView.setPagingOptions({pageNum: state.pagingInfo.totalPages - 1});
-      }
-    },
-    getNavState: function() {
-      var cannotLeaveEditMode = !Slick.GlobalEditorLock.commitCurrentEdit();
-      var pagingInfo = this.dataView.getPagingInfo();
-      var lastPage = pagingInfo.totalPages - 1;
+      parser.query = query;
 
-      return {
-        canGotoFirst: !cannotLeaveEditMode && pagingInfo.pageSize !== 0 && pagingInfo.pageNum > 0,
-        canGotoLast: !cannotLeaveEditMode && pagingInfo.pageSize !== 0 && pagingInfo.pageNum !== lastPage,
-        canGotoPrev: !cannotLeaveEditMode && pagingInfo.pageSize !== 0 && pagingInfo.pageNum > 0,
-        canGotoNext: !cannotLeaveEditMode && pagingInfo.pageSize !== 0 && pagingInfo.pageNum < lastPage,
-        pagingInfo: pagingInfo
-      };
+      return parser;
     },
-  });
-
-  /*
-   * ## MainView
-   */
-  Grid.MainView = Backbone.Marionette.Layout.extend({
-    template: JST['grid/main'],
-    regions: {
-      pager: ".grid-pager"
+    hasPrevious: function() {
+        return this.hasPreviousPage();
+    },
+    hasNext: function() {
+        return this.hasNextPage();
     }
   });
 
-  /*
-   * ## Router
-   */
+  Grid.View = Backbone.Marionette.ItemView.extend({
+    template: function() { return ''; },
+    initialize: function(options) {
+      this.gridView = new Backgrid.Grid({
+        columns: options.columns,
+        collection: options.collection
+      });
+      this.pagerView = new Backgrid.Extension.Paginator({
+        collection: options.collection
+      });
+    },
+    onRender: function() {
+      this.gridView.render().$el.appendTo(this.$el);
+      this.pagerView.render().$el.appendTo(this.$el);
+    }
+  });
+
   Grid.Router = Marionette.AppRouter.extend({
     appRoutes: {
-      'grid': 'showGrid'
+      'grid/:collection': 'showGrid'
     }
   });
 
-  /*
-   * ## Controller
-   */
   Grid.Controller = Marionette.Controller.extend({
-    showGrid: function() {
-      var view = new Grid.MainView();
-      Grid.pager = view.pager;
-      Grid.mainAction();
-      mainRegion.show(view);
+    showGrid: function(grid) {
+      Grid.url = grid.replace(/_/g, '/');
+
+      $.ajax('http://graviton.beta.scapp.io/'+Grid.url, {
+        type: 'OPTIONS',
+        success: function(schema) {
+          var columns = [];
+          _.each(schema.items.properties, function(value, name) {
+            columns.push({
+              name: name,
+              cell: value.type,
+              label: value.title,
+              sortable: false
+            });
+          });
+          var collection = new Grid.Collection();
+          collection.fetch();
+
+          var view = new Grid.View({
+            columns: columns,
+            collection: collection
+          });
+
+          mainRegion.show(view);
+        }
+      });
     }
   });
 
-  /*
-   * ## Initializer
-   *
-   * fire up a router/controller combo
-   */
   Grid.addInitializer(function() {
     new Grid.Router({
       controller: new Grid.Controller()
     });
   });
 
-}, JST, Graviphoton.main, Slick);
+}, JST, Graviphoton.main);
