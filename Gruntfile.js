@@ -135,9 +135,6 @@ module.exports = function(grunt) {
           '<%= dirs.bower.src %>/bootstrap/dist/css/bootstrap.css',
           '<%= dirs.bower.src %>/bootstrap/dist/css/bootstrap-theme.css',
           '<%= dirs.bower.src %>/font-awesome/css/font-awesome.css',
-          '<%= dirs.bower.src %>/backgrid/lib/backgrid.css',
-          '<%= dirs.bower.src %>/backgrid/lib/extensions/paginator/backgrid-paginator.css',
-          '<%= dirs.bower.src %>/backgrid-paginator/backgrid-paginator.css',
           '<%= dirs.src %>/**/*.css'
         ],
         dest: '<%= dirs.dest %>/<%= pkg.name %>.css',
