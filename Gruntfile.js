@@ -113,7 +113,6 @@ module.exports = function(grunt) {
         src: [
           '<%= dirs.bower.src %>/underscore/underscore.js',
           '<%= dirs.bower.src %>/jquery/jquery.js',
-          '<%= dirs.bower.src %>/jquery.event/event.drag/jquery.event.drag.js',
           '<%= dirs.bower.src %>/backbone/backbone.js',
           '<%= dirs.bower.src %>/backbone.marionette/lib/backbone.marionette.js',
           '<%= dirs.bower.src %>/backbone.bootstrap-modal/src/backbone.bootstrap-modal.js',
@@ -121,7 +120,6 @@ module.exports = function(grunt) {
           '<%= dirs.bower.src %>/backbone-schema/backbone-schema.js',
           '<%= dirs.bower.src %>/backgrid/lib/backgrid.js',
           '<%= dirs.bower.src %>/backgrid-paginator/backgrid-paginator.js',
-          '<%= dirs.bower.src %>/backbone.datagrid/dist/backbone.datagrid.js',
           '<%= dirs.bower.src %>/less.js/dist/less-<%= bowerJson.dependencies["less.js"].substr(1) %>.js',
           '<%= dirs.bower.src %>/bootstrap/dist/js/bootstrap.js',
           '<%= dirs.dest %>/templates.js',
