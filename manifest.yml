@@ -1,0 +1,6 @@
+---
+applications:
+- name: graviphoton
+  buildpack: https://github.com/cloudfoundry-community/nginx-buildpack.git
+  path: dist/
+  memory: 128M
