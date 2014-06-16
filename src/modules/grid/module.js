@@ -81,15 +81,41 @@ Graviphoton.module('Grid', function(Grid, App, Backbone, Marionette, $, _, JST, 
     }
   });
 
+  Grid.Paginator = Backgrid.Extension.Paginator.extend({
+    render: function () {
+      // replaces orignal with clone that decorates ul tags
+      this.$el.empty();
+
+      if (this.handles) {
+        var handles = this.handles
+        _.each(handles, function(handle, index) {
+          handles[index].remove();
+        });
+      }
+
+      var handles = this.handles = this.makeHandles();
+      var ul = document.createElement("ul");
+      ul.className = 'pagination';
+      _.each(handles, function(handle) {
+        ul.appendChild(handle.render().el);
+      });
+      this.el.appendChild(ul);
+
+      return this;
+    }
+  });
+
   Grid.View = Backbone.Marionette.ItemView.extend({
     template: function() { return ''; },
     initialize: function(options) {
       this.gridView = new Backgrid.Grid({
         columns: options.columns,
-        collection: options.collection
+        collection: options.collection,
+        className: 'table table-striped'
       });
-      this.pagerView = new Backgrid.Extension.Paginator({
-        collection: options.collection
+      this.pagerView = new Grid.Paginator({
+        collection: options.collection,
+        className: 'grid text-center',
       });
     },
     onRender: function() {
@@ -117,7 +143,8 @@ Graviphoton.module('Grid', function(Grid, App, Backbone, Marionette, $, _, JST, 
               name: name,
               cell: value.type,
               label: value.title,
-              sortable: false
+              sortable: false,
+              editable: false
             });
           });
           var collection = new Grid.Collection();
