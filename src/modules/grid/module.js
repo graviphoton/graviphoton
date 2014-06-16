@@ -85,15 +85,15 @@ Graviphoton.module('Grid', function(Grid, App, Backbone, Marionette, $, _, JST, 
     render: function () {
       // replaces orignal with clone that decorates ul tags
       this.$el.empty();
+      var handles = this.handles;
 
       if (this.handles) {
-        var handles = this.handles
         _.each(handles, function(handle, index) {
           handles[index].remove();
         });
       }
 
-      var handles = this.handles = this.makeHandles();
+      handles = this.handles = this.makeHandles();
       var ul = document.createElement("ul");
       ul.className = 'pagination';
       _.each(handles, function(handle) {
