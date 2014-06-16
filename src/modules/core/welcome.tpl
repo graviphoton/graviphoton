@@ -8,4 +8,9 @@
   <li>twitter-bootstrap</li>
   <li>font-awesome</li>
   <li>backgrid.js</li>
+</ul>
+<p>You might look at the demos.</p>
 <ul>
+  <li><a href="#grid/core_app">App Grid</a></li>
+  <li><a href="#grid/taxonomy_country">Country Grid</a></li>
+</ul>
