@@ -76,12 +76,14 @@ Graviphoton.module('Menu', function(Menu, App, Backbone, Marionette, $, _, JST, 
     emptyView: Menu.EmptyItemView,
     tagName: 'ul',
     className: 'nav navbar-nav',
-    initialize: function() {
+    initialize: function(options) {
+      this.options = options;
       var errorHandle = this.options.error || console.error;
+      var loadedHandle = this.options.loaded || function() {};
       this.collection = this.options.collection || console.error('Please pass a collection to Menu.View.');
 
       this.collection.fetch({
-        success: this.options.loaded(this),
+        success: loadedHandle(this),
         error: errorHandle
       });
     }
