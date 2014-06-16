@@ -86,7 +86,8 @@ Graviphoton.module('Grid', function(Grid, App, Backbone, Marionette, $, _, JST, 
     initialize: function(options) {
       this.gridView = new Backgrid.Grid({
         columns: options.columns,
-        collection: options.collection
+        collection: options.collection,
+        className: 'table table-striped'
       });
       this.pagerView = new Backgrid.Extension.Paginator({
         collection: options.collection
@@ -117,7 +118,8 @@ Graviphoton.module('Grid', function(Grid, App, Backbone, Marionette, $, _, JST, 
               name: name,
               cell: value.type,
               label: value.title,
-              sortable: false
+              sortable: false,
+              editable: false
             });
           });
           var collection = new Grid.Collection();
