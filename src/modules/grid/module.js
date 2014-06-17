@@ -116,6 +116,12 @@ Graviphoton.module('Grid', function(Grid, App, Backbone, Marionette, $, _, JST, 
       this.pagerView = new Grid.Paginator({
         collection: options.collection,
         className: 'grid text-center',
+        controls: {
+        rewind: { label: '&laquo;' },
+          back: { label: '&lsaquo;' },
+          forward: { label: '&rsaquo;' },
+          fastForward: { label: '&raquo;' }
+        }
       });
     },
     onRender: function() {
