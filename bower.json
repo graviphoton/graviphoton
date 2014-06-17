@@ -17,7 +17,6 @@
     "backbone": "~1.0",
     "backbone.marionette": "~1.1.0",
     "bootstrap": "~3.0.0",
-    "less.js": "~1.4.2",
     "font-awesome": "~3.2.1",
     "jquery": "~2.0.3",
     "backbone.paginator": "~2.0.0",

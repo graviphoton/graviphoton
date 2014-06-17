@@ -120,7 +120,6 @@ module.exports = function(grunt) {
           '<%= dirs.bower.src %>/backbone-schema/backbone-schema.js',
           '<%= dirs.bower.src %>/backgrid/lib/backgrid.js',
           '<%= dirs.bower.src %>/backgrid-paginator/backgrid-paginator.js',
-          '<%= dirs.bower.src %>/less.js/dist/less-<%= bowerJson.dependencies["less.js"].substr(1) %>.js',
           '<%= dirs.bower.src %>/bootstrap/dist/js/bootstrap.js',
           '<%= dirs.dest %>/templates.js',
           '<%= dirs.src %>/graviphoton.js',
@@ -138,13 +137,6 @@ module.exports = function(grunt) {
           '<%= dirs.src %>/**/*.css'
         ],
         dest: '<%= dirs.dest %>/<%= pkg.name %>.css',
-      },
-      // * less
-      less: {
-        src: [
-          '<%= dirs.src %>/**/*.less'
-        ],
-        dest: '<%= dirs.dest %>/<%= pkg.name %>.less'
       }
     },
     /*
@@ -260,7 +252,7 @@ module.exports = function(grunt) {
        *
        * In dev mode the preprocessor creates a very verbose file in
        * dist/dev.html. This files contains regular script includes
-       * to css, less and js files. This way you can hack on those
+       * to css and js files. This way you can hack on those
        * scripts and only need to run ```grunt dev``` when adding new
        * files in src/ or bower_modules/.
        */
@@ -274,9 +266,6 @@ module.exports = function(grunt) {
             CSS_INCLUDES: '<% var css_files = [];'+
                           'grunt.util.recurse(concat.css.src, function(a) { css_files.push(grunt.file.expand(grunt.template.process(a))); }); '+
                           'grunt.util.recurse(css_files, function (a) { %><link rel="stylesheet" type="text/css" href="../<%= a %>" />\n    <% }); %>',
-            LESS_INCLUDES: '<% var less_files = [];'+
-                           'grunt.util.recurse(concat.less.src, function(a) { less_files.push(grunt.file.expand(grunt.template.process(a))); }); '+
-                           'grunt.util.recurse(less_files, function (a) { %><link rel="stylesheet/less" type="text/css" href="../<%= a %>" />\n    <% }); %>',
             JS_INCLUDES: '<% var js_files = []; '+
                          'grunt.util.recurse(concat.js.src, function(a) { js_files.push(grunt.file.expand(grunt.template.process(a))); }); '+
                          'grunt.util.recurse(js_files, function (a) { %><script type="text/javascript" src="../<%= a %>"></script>\n    <% }); %>'
