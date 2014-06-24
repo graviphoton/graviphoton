@@ -148,7 +148,7 @@ Graviphoton.module('Grid', function(Grid, App, Backbone, Marionette, $, _, JST, 
             columns.push({
               name: name,
               cell: value.type,
-              label: value.title,
+              label: value.title.en,
               sortable: false,
               editable: false
             });
