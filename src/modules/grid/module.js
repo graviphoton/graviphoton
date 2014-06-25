@@ -5,6 +5,19 @@
  *
  */
 Graviphoton.module('Grid', function(Grid, App, Backbone, Marionette, $, _, JST, mainRegion) {
+
+  Backgrid.I18nCell = Backgrid.Cell.extend({
+    className: 'i18n-cell',
+    formatter: Backgrid.StringFormatter,
+    render: function() {
+      // copy of same method from Backgrid.StringCell but with .en in the mix
+      // @todo use *-language headers to decide which language to use here
+      var model = this.model;
+      this.$el.html(this.formatter.fromRaw(model.get(this.column.get("name")).en, model));
+      return this;
+    }
+  });
+
   Grid.url = '';
 
   Grid.Model = Backbone.Model.extend({});
@@ -140,14 +153,18 @@ Graviphoton.module('Grid', function(Grid, App, Backbone, Marionette, $, _, JST, 
     showGrid: function(grid) {
       Grid.url = grid.replace(/_/g, '/');
 
-      $.ajax('http://graviton.beta.scapp.io/'+Grid.url, {
+      $.ajax('http://graviton-060.beta.scapp.io/'+Grid.url, {
         type: 'OPTIONS',
         success: function(schema) {
           var columns = [];
           _.each(schema.items.properties, function(value, name) {
+            var valueType = value.type;
+            if (value.translatable) {
+              valueType = 'i18n';
+            }
             columns.push({
               name: name,
-              cell: value.type,
+              cell: valueType,
               label: value.title.en,
               sortable: false,
               editable: false

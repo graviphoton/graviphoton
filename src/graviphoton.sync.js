@@ -5,7 +5,7 @@ Backbone.sync = function(method, model, options) {
 
   if (url) {  // If no url, don't override, let Backbone.sync do its normal fail
     options = options || {};
-    options.url = "http://graviton.beta.scapp.io" + url;
+    options.url = "http://graviton-060.beta.scapp.io" + url;
   }
 
   // Let normal Backbone.sync do its thing
