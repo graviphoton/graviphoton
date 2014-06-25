@@ -113,19 +113,17 @@ module.exports = function(grunt) {
         src: [
           '<%= dirs.bower.src %>/underscore/underscore.js',
           '<%= dirs.bower.src %>/jquery/jquery.js',
-          '<%= dirs.bower.src %>/jquery.event/event.drag/jquery.event.drag.js',
           '<%= dirs.bower.src %>/backbone/backbone.js',
           '<%= dirs.bower.src %>/backbone.marionette/lib/backbone.marionette.js',
           '<%= dirs.bower.src %>/backbone.bootstrap-modal/src/backbone.bootstrap-modal.js',
+          '<%= dirs.bower.src %>/backbone.paginator/lib/backbone.paginator.js',
+          '<%= dirs.bower.src %>/backbone-schema/backbone-schema.js',
           '<%= dirs.bower.src %>/backgrid/lib/backgrid.js',
-          '<%= dirs.bower.src %>/backgrid/lib/extensions/paginator/backgrid-paginator.js',
-          '<%= dirs.bower.src %>/less.js/dist/less-<%= bowerJson.dependencies["less.js"].substr(1) %>.js',
+          '<%= dirs.bower.src %>/backgrid-paginator/backgrid-paginator.js',
           '<%= dirs.bower.src %>/bootstrap/dist/js/bootstrap.js',
-          '<%= dirs.bower.src %>/slickgrid/slick.*.js',
-          '<%= dirs.bower.src %>/slickgrid/controls/slick.*.js',
-          '<%= dirs.bower.src %>/slickgrid/plugins/slick.*.js',
           '<%= dirs.dest %>/templates.js',
           '<%= dirs.src %>/graviphoton.js',
+          '<%= dirs.src %>/graviphoton.sync.js',
           '<%= dirs.src %>/modules/**/*.js'
         ],
         dest: '<%= dirs.dest %>/<%= pkg.name %>.js',
@@ -136,21 +134,9 @@ module.exports = function(grunt) {
           '<%= dirs.bower.src %>/bootstrap/dist/css/bootstrap.css',
           '<%= dirs.bower.src %>/bootstrap/dist/css/bootstrap-theme.css',
           '<%= dirs.bower.src %>/font-awesome/css/font-awesome.css',
-          '<%= dirs.bower.src %>/backgrid/lib/backgrid.css',
-          '<%= dirs.bower.src %>/backgrid/lib/extensions/paginator/backgrid-paginator.css',
-          '<%= dirs.bower.src %>/slickgrid/slick.grid.css',
-          '<%= dirs.bower.src %>/slickgrid/controls/slick.pager.css',
-          '<%= dirs.bower.src %>/slickgrid/controls/slick.columnpicker.css',
           '<%= dirs.src %>/**/*.css'
         ],
         dest: '<%= dirs.dest %>/<%= pkg.name %>.css',
-      },
-      // * less
-      less: {
-        src: [
-          '<%= dirs.src %>/**/*.less'
-        ],
-        dest: '<%= dirs.dest %>/<%= pkg.name %>.less'
       }
     },
     /*
@@ -266,7 +252,7 @@ module.exports = function(grunt) {
        *
        * In dev mode the preprocessor creates a very verbose file in
        * dist/dev.html. This files contains regular script includes
-       * to css, less and js files. This way you can hack on those
+       * to css and js files. This way you can hack on those
        * scripts and only need to run ```grunt dev``` when adding new
        * files in src/ or bower_modules/.
        */
@@ -280,9 +266,6 @@ module.exports = function(grunt) {
             CSS_INCLUDES: '<% var css_files = [];'+
                           'grunt.util.recurse(concat.css.src, function(a) { css_files.push(grunt.file.expand(grunt.template.process(a))); }); '+
                           'grunt.util.recurse(css_files, function (a) { %><link rel="stylesheet" type="text/css" href="../<%= a %>" />\n    <% }); %>',
-            LESS_INCLUDES: '<% var less_files = [];'+
-                           'grunt.util.recurse(concat.less.src, function(a) { less_files.push(grunt.file.expand(grunt.template.process(a))); }); '+
-                           'grunt.util.recurse(less_files, function (a) { %><link rel="stylesheet/less" type="text/css" href="../<%= a %>" />\n    <% }); %>',
             JS_INCLUDES: '<% var js_files = []; '+
                          'grunt.util.recurse(concat.js.src, function(a) { js_files.push(grunt.file.expand(grunt.template.process(a))); }); '+
                          'grunt.util.recurse(js_files, function (a) { %><script type="text/javascript" src="../<%= a %>"></script>\n    <% }); %>'

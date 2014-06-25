@@ -1,1 +1,1 @@
-<a href="#<%= name %>"><%= title %></a>
+<a href="#<%= id %>"><%= title.en %></a>
