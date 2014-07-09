@@ -6,21 +6,40 @@
  */
 Graviphoton.module('Grid', function(Grid, App, Backbone, Marionette, $, _, JST, mainRegion) {
 
+
+  Backgrid.I18nFormatter = function () {};
+  Backgrid.I18nFormatter.prototype = new Backgrid.CellFormatter();
+  _.extend(Backgrid.I18nFormatter.prototype, {
+    fromRaw: function (rawData, model) {
+      // @todo use *-language headers to decide which language to use here
+      return rawData.en;
+    },
+    toRaw: function(formattedData, model) {
+      return { 'en': formattedData };
+    }
+  });
+  Backgrid.I18nEditor = Backgrid.InputCellEditor.extend({
+    initialize: function() {
+      Backgrid.CellEditor.prototype.initialize.apply(this, arguments);
+    }
+  });
   Backgrid.I18nCell = Backgrid.Cell.extend({
     className: 'i18n-cell',
-    formatter: Backgrid.StringFormatter,
-    render: function() {
-      // copy of same method from Backgrid.StringCell but with .en in the mix
-      // @todo use *-language headers to decide which language to use here
-      var model = this.model;
-      this.$el.html(this.formatter.fromRaw(model.get(this.column.get("name")).en, model));
-      return this;
-    }
+    formatter: Backgrid.I18nFormatter,
+    editor: Backgrid.I18nEditor
   });
 
   Grid.url = '';
 
-  Grid.Model = Backbone.Model.extend({});
+  Grid.Model = Backbone.Model.extend({
+    initialize: function() {
+      Backbone.Model.prototype.initialize.apply(this, arguments);
+      this.on("change", function(model, options) {
+              console.debug('saving the day', options);
+              model.save();
+      });
+    }
+  });
 
   Grid.Collection = Backbone.PageableCollection.extend({
     model: Grid.Model,
@@ -156,10 +175,12 @@ Graviphoton.module('Grid', function(Grid, App, Backbone, Marionette, $, _, JST, 
       var loadFunc = function() {
         $.ajax(Graviphoton.config.base + '/' + Grid.url, {
           type: 'OPTIONS',
-          success: function(schema) {
+          success: function(schema, textStatus, request) {
             var columns = [];
+            var editableTable = (request.getResponseHeader('Access-Control-Allow-Methods').indexOf('PUT') != -1)
             _.each(schema.items.properties, function(value, name) {
               var valueType = value.type;
+              var editableColumn = true;
               if (value.translatable) {
                 valueType = 'i18n';
               }
@@ -168,7 +189,7 @@ Graviphoton.module('Grid', function(Grid, App, Backbone, Marionette, $, _, JST, 
                 cell: valueType,
                 label: value.title.en,
                 sortable: false,
-                editable: false
+                editable: editableTable && editableColumn
               });
             });
             var collection = new Grid.Collection();
