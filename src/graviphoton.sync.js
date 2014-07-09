@@ -5,7 +5,7 @@ Backbone.sync = function(method, model, options) {
 
   // hacky workaround to get this initialized early, gets replaced with real config on later calls
   if (typeof Graviphoton.config == 'undefined') {
-          Graviphoton.config = { base: '' }
+      Graviphoton.config = { base: '' };
   }
 
   if (url) {  // If no url, don't override, let Backbone.sync do its normal fail

@@ -177,7 +177,7 @@ Graviphoton.module('Grid', function(Grid, App, Backbone, Marionette, $, _, JST, 
           type: 'OPTIONS',
           success: function(schema, textStatus, request) {
             var columns = [];
-            var editableTable = (request.getResponseHeader('Access-Control-Allow-Methods').indexOf('PUT') != -1)
+            var editableTable = (request.getResponseHeader('Access-Control-Allow-Methods').indexOf('PUT') != -1);
             _.each(schema.items.properties, function(value, name) {
               var valueType = value.type;
               var editableColumn = true;
@@ -208,7 +208,7 @@ Graviphoton.module('Grid', function(Grid, App, Backbone, Marionette, $, _, JST, 
         loadFunc();
       } else {
         Graviphoton.on('config:loaded', loadFunc);
-      };
+      }
     }
   });
 
