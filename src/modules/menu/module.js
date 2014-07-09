@@ -78,13 +78,16 @@ Graviphoton.module('Menu', function(Menu, App, Backbone, Marionette, $, _, JST, 
     className: 'nav navbar-nav',
     initialize: function(options) {
       this.options = options;
-      var errorHandle = this.options.error || console.error;
-      var loadedHandle = this.options.loaded || function() {};
+      this.errorHandle = this.options.error || console.error;
+      this.loadedHandle = this.options.loaded || function() {};
       this.collection = this.options.collection || console.error('Please pass a collection to Menu.View.');
 
+      _.bind(this.fetchData, 'config:loaded');
+    },
+    fetchData: function() {
       this.collection.fetch({
-        success: loadedHandle(this),
-        error: errorHandle
+        success: this.loadedHandle(this),
+        error: this.errorHandle
       });
     }
   });
@@ -93,12 +96,15 @@ Graviphoton.module('Menu', function(Menu, App, Backbone, Marionette, $, _, JST, 
    * initalize a menu view and hand over to layout when done
    */
   Menu.addInitializer(function() {
-    new Menu.View({
+    var view = new Menu.View({
       collection: new Menu.ItemCollection(),
       loaded: function(menu) {
         // @todo use events rather than this
         Layout.menuLoaded(menu);
       }
+    });
+    Graviphoton.on('config:loaded', function() {
+      view.fetchData();
     });
   });
 
