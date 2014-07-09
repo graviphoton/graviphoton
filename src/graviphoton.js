@@ -18,5 +18,17 @@ Graviphoton.on('initialize:after', function() {
   // enable back/forward buttons
   Backbone.history.start();
   console.debug('Marionette initialized:', this);
+})
+
+Graviphoton.on('start', function() {
+  $.ajax('/graviphoton.json', {
+    dataType: 'json',
+    success: function(data) {
+      Graviphoton.config = data;
+      Graviphoton.trigger('config:loaded');
+      console.debug('Loaded config data from graviphoton.json');
+    }
+  });
+  console.debug('Graviphoton initialized');
 });
 

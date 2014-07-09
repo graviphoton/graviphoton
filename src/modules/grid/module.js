@@ -153,34 +153,41 @@ Graviphoton.module('Grid', function(Grid, App, Backbone, Marionette, $, _, JST, 
     showGrid: function(grid) {
       Grid.url = grid.replace(/_/g, '/');
 
-      $.ajax('http://graviton-060.beta.scapp.io/'+Grid.url, {
-        type: 'OPTIONS',
-        success: function(schema) {
-          var columns = [];
-          _.each(schema.items.properties, function(value, name) {
-            var valueType = value.type;
-            if (value.translatable) {
-              valueType = 'i18n';
-            }
-            columns.push({
-              name: name,
-              cell: valueType,
-              label: value.title.en,
-              sortable: false,
-              editable: false
+      var loadFunc = function() {
+        $.ajax(Graviphoton.config.base + '/' + Grid.url, {
+          type: 'OPTIONS',
+          success: function(schema) {
+            var columns = [];
+            _.each(schema.items.properties, function(value, name) {
+              var valueType = value.type;
+              if (value.translatable) {
+                valueType = 'i18n';
+              }
+              columns.push({
+                name: name,
+                cell: valueType,
+                label: value.title.en,
+                sortable: false,
+                editable: false
+              });
             });
-          });
-          var collection = new Grid.Collection();
-          collection.fetch();
+            var collection = new Grid.Collection();
+            collection.fetch();
 
-          var view = new Grid.View({
-            columns: columns,
-            collection: collection
-          });
+            var view = new Grid.View({
+              columns: columns,
+              collection: collection
+            });
 
-          mainRegion.show(view);
-        }
-      });
+            mainRegion.show(view);
+          }
+        });
+      };
+      if (typeof Graviphoton.config !== 'undefined') {
+        loadFunc();
+      } else {
+        Graviphoton.on('config:loaded', loadFunc);
+      };
     }
   });
 
