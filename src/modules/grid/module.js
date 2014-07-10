@@ -198,6 +198,41 @@ Graviphoton.module('Grid', function(Grid, App, Backbone, Marionette, $, _, JST, 
     }
   });
 
+  Grid.Columns = Backgrid.Columns.extend({
+    initialize: function(models, options) {
+      Backgrid.Columns.prototype.initialize.apply(this, arguments);
+      this.url = options.url || null;
+    },
+    sync: function() {
+      var that = this;
+      Backbone.$.ajax(Graviphoton.getUrl(this.url), {
+        type: 'OPTIONS',
+        success: function() {
+          that.loadFromSchema.apply(that, arguments);
+        }
+      });
+    },
+    loadFromSchema: function(schema, textStatus, request) {
+      this.editableTable = (request.getResponseHeader('Access-Control-Allow-Methods').indexOf('PUT') != -1);
+
+      _.each(schema.items.properties, this.loadColumnFromProperty, this);
+    },
+    loadColumnFromProperty: function(property, name) {
+      var cellType = property.type;
+      if (property.translatable) {
+        cellType = 'i18n';
+      }
+      this.push({
+        name: name,
+        cell: cellType,
+        label: property.title.en,
+        sortable: false,
+        editable: this.editableTable,
+        translatable: property.translatable
+      });
+    }
+  });
+
   Grid.Router = Marionette.AppRouter.extend({
     appRoutes: {
       'grid/:collection': 'showGrid'
@@ -206,39 +241,20 @@ Graviphoton.module('Grid', function(Grid, App, Backbone, Marionette, $, _, JST, 
 
   Grid.Controller = Marionette.Controller.extend({
     showGrid: function(grid) {
-      Grid.url = grid.replace(/_/g, '/');
 
       var loadFunc = function() {
-        $.ajax(Graviphoton.config.base + '/' + Grid.url, {
-          type: 'OPTIONS',
-          success: function(schema, textStatus, request) {
-            var columns = [];
-            var editableTable = (request.getResponseHeader('Access-Control-Allow-Methods').indexOf('PUT') != -1);
-            _.each(schema.items.properties, function(value, name) {
-              var valueType = value.type;
-              var editableColumn = true;
-              if (value.translatable) {
-                valueType = 'i18n';
-              }
-              columns.push({
-                name: name,
-                cell: valueType,
-                label: value.title.en,
-                sortable: false,
-                editable: editableTable && editableColumn
-              });
-            });
-            var collection = new Grid.Collection();
-            collection.fetch();
+        Grid.url = grid.replace(/_/g, '/');
+        var columns = new Grid.Columns([], { url: Grid.url });
+        columns.fetch();
+        var collection = new Grid.Collection([], { url: Grid.url });
+        collection.fetch();
 
-            var view = new Grid.View({
-              columns: columns,
-              collection: collection
-            });
-
-            mainRegion.show(view);
-          }
+        var view = new Grid.View({
+          columns: columns,
+          collection: collection
         });
+
+        mainRegion.show(view);
       };
       if (typeof Graviphoton.config !== 'undefined') {
         loadFunc();
