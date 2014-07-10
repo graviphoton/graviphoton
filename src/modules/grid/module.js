@@ -12,6 +12,9 @@ Graviphoton.module('Grid', function(Grid, App, Backbone, Marionette, $, _, JST, 
   _.extend(Backgrid.I18nFormatter.prototype, {
     fromRaw: function (rawData, model) {
       // @todo use *-language headers to decide which language to use here
+      if (typeof rawData === 'undefined') {
+              rawData = { "en": "" }
+      }
       return rawData.en;
     },
     toRaw: function(formattedData, model) {
@@ -34,10 +37,18 @@ Graviphoton.module('Grid', function(Grid, App, Backbone, Marionette, $, _, JST, 
   Grid.Model = Backbone.Model.extend({
     initialize: function() {
       Backbone.Model.prototype.initialize.apply(this, arguments);
+      this.isFromServer = false;
       this.on("change", function(model, options) {
-              console.debug('saving the day', options);
-              model.save();
+          model.save();
       });
+    },
+    sync: function() {
+      Backbone.Model.prototype.sync.apply(this, arguments);
+      this.isFromServer = true;
+    },
+    isNew: function() {
+      // override isNew to allow detection that is not based on server set ids
+      return !this.isFromServer;
     }
   });
 
@@ -115,7 +126,8 @@ Graviphoton.module('Grid', function(Grid, App, Backbone, Marionette, $, _, JST, 
 
   Grid.Paginator = Backgrid.Extension.Paginator.extend({
     render: function () {
-      // replaces orignal with clone that decorates ul tags
+      // replaces orignal with clone that decorates ul tags with the pagination class
+      // also adds add new button if applicable
       this.$el.empty();
       var handles = this.handles;
 
@@ -131,8 +143,18 @@ Graviphoton.module('Grid', function(Grid, App, Backbone, Marionette, $, _, JST, 
       _.each(handles, function(handle) {
         ul.appendChild(handle.render().el);
       });
-      this.el.appendChild(ul);
 
+      var btnNew = document.createElement('a');
+      btnNew.textContent = '+';
+      var btnLi = document.createElement('li');
+      btnLi.appendChild(btnNew);
+      ul.appendChild(btnLi);
+
+      $(btnNew).click(function() {
+          Graviphoton.trigger('grid:new');
+      });
+
+      this.el.appendChild(ul);
       return this;
     }
   });
@@ -143,22 +165,36 @@ Graviphoton.module('Grid', function(Grid, App, Backbone, Marionette, $, _, JST, 
       this.gridView = new Backgrid.Grid({
         columns: options.columns,
         collection: options.collection,
-        className: 'table table-striped'
+        className: 'table table-striped table-bordered'
       });
       this.pagerView = new Grid.Paginator({
         collection: options.collection,
         className: 'grid text-center',
         controls: {
-        rewind: { label: '&laquo;' },
+          rewind: { label: '&laquo;' },
           back: { label: '&lsaquo;' },
           forward: { label: '&rsaquo;' },
           fastForward: { label: '&raquo;' }
         }
       });
+      var that = this;
+      Graviphoton.on('grid:new', function() {
+        that.onAddRow()
+      });
     },
     onRender: function() {
       this.gridView.render().$el.appendTo(this.$el);
       this.pagerView.render().$el.appendTo(this.$el);
+    },
+    onAddRow: function() {
+      var newModel = new Grid.Model();
+      _.each(this.gridView.columns.models, function(value) {
+          newModel[value.attributes.name] = '';
+          if (value.attributes.translatable) {
+            newModel[value.attributes.name] = { 'en': '' }
+          }
+      });
+      this.gridView.insertRow(newModel);
     }
   });
 
