@@ -13,7 +13,7 @@ Graviphoton.module('Grid', function(Grid, App, Backbone, Marionette, $, _, JST, 
     fromRaw: function (rawData, model) {
       // @todo use *-language headers to decide which language to use here
       if (typeof rawData === 'undefined') {
-              rawData = { "en": "" }
+        rawData = { "en": "" };
       }
       return rawData.en;
     },
@@ -31,6 +31,36 @@ Graviphoton.module('Grid', function(Grid, App, Backbone, Marionette, $, _, JST, 
     formatter: Backgrid.I18nFormatter,
     editor: Backgrid.I18nEditor
   });
+  Backgrid.I18nRequiredCell = Backgrid.I18nCell.extend({
+    render: function() {
+      var rendered = Backgrid.I18nCell.prototype.render.apply(this, arguments);
+      var value = this.model.get(this.column.get("name"));
+      if ((typeof value === 'undefined') || value.en === '') {
+        rendered.$el.addClass('danger');
+      } else {
+        rendered.$el.removeClass('danger');
+      }
+      return rendered;
+    }
+  });
+
+  Backgrid.StringRequiredCell = Backgrid.StringCell.extend({
+    render: function() {
+      var rendered = Backgrid.StringCell.prototype.render.apply(this, arguments);
+      var value = this.model.get(this.column.get("name"));
+      if (typeof value === 'undefined') {
+        rendered.$el.addClass('danger');
+      } else {
+        rendered.$el.removeClass('danger');
+      }
+      return rendered;
+    }
+  });
+
+  Backgrid.BooleanRequiredCell = Backgrid.BooleanCell.extend({
+    // do nothing since undefined is simply fals in such cases
+  });
+
 
   Grid.url = '';
 
@@ -39,10 +69,7 @@ Graviphoton.module('Grid', function(Grid, App, Backbone, Marionette, $, _, JST, 
       Backbone.Model.prototype.initialize.apply(this, arguments);
       this.isFromServer = true;
       this.on("change", function(model, options) {
-          model.save();
-      });
-      this.on('invalid', function(model, error) {
-              console.error(error);
+        model.save();
       });
     },
     isNew: function() {
@@ -161,7 +188,7 @@ Graviphoton.module('Grid', function(Grid, App, Backbone, Marionette, $, _, JST, 
       ul.appendChild(btnLi);
 
       $(btnNew).click(function() {
-          Graviphoton.trigger('grid:new');
+        Graviphoton.trigger('grid:new');
       });
 
       this.el.appendChild(ul);
@@ -189,7 +216,7 @@ Graviphoton.module('Grid', function(Grid, App, Backbone, Marionette, $, _, JST, 
       });
       var that = this;
       Graviphoton.on('grid:new', function() {
-        that.onAddRow()
+        that.onAddRow();
       });
     },
     onRender: function() {
@@ -199,10 +226,10 @@ Graviphoton.module('Grid', function(Grid, App, Backbone, Marionette, $, _, JST, 
     onAddRow: function() {
       var newModel = new Grid.Model();
       _.each(this.gridView.columns.models, function(value) {
-          newModel[value.attributes.name] = '';
-          if (value.attributes.translatable) {
-            newModel[value.attributes.name] = { 'en': '' }
-          }
+        newModel[value.attributes.name] = '';
+        if (value.attributes.translatable) {
+          newModel[value.attributes.name] = { 'en': '' };
+        }
       });
       newModel.isFromServer = false;
       this.gridView.insertRow(newModel);
@@ -230,18 +257,27 @@ Graviphoton.module('Grid', function(Grid, App, Backbone, Marionette, $, _, JST, 
       _.each(schema.items.properties, this.loadColumnFromProperty, this);
     },
     loadColumnFromProperty: function(property, name) {
-      var cellType = property.type;
+      var type = property.type;
       if (property.translatable) {
-        cellType = 'i18n';
+        type = 'i18n';
       }
-      this.push({
+      if (this.requiredFields.indexOf(name) != -1) {
+        cellName = type.charAt(0).toUpperCase() + type.slice(1) + 'RequiredCell';
+        if (typeof Backgrid[cellName] !== 'undefined') {
+          type = type + 'Required';
+        } else {
+          console.debug('Please define Backgrid.'+cellName);
+        }
+      }
+      var options = {
         name: name,
-        cell: cellType,
+        cell: type,
         label: property.title.en,
         sortable: false,
         editable: this.editableTable,
-        translatable: property.translatable
-      });
+        translatable: property.translatable,
+      };
+      this.push(options);
     },
     validate: function(model, options)
     {
@@ -272,12 +308,10 @@ Graviphoton.module('Grid', function(Grid, App, Backbone, Marionette, $, _, JST, 
         var columns = new Grid.Columns([], { url: Grid.url });
         columns.fetch();
         var collection = new Grid.Collection([], {
-            url: Grid.url,
-            columns: columns
+          url: Grid.url,
+          columns: columns
         });
         collection.fetch();
-
-        collection.model.validate = columns.validate;
 
         var view = new Grid.View({
           columns: columns,
