@@ -37,23 +37,30 @@ Graviphoton.module('Grid', function(Grid, App, Backbone, Marionette, $, _, JST, 
   Grid.Model = Backbone.Model.extend({
     initialize: function() {
       Backbone.Model.prototype.initialize.apply(this, arguments);
-      this.isFromServer = false;
+      this.isFromServer = true;
       this.on("change", function(model, options) {
           model.save();
       });
-    },
-    sync: function() {
-      Backbone.Model.prototype.sync.apply(this, arguments);
-      this.isFromServer = true;
+      this.on('invalid', function(model, error) {
+              console.error(error);
+      });
     },
     isNew: function() {
       // override isNew to allow detection that is not based on server set ids
       return !this.isFromServer;
+    },
+    validate: function(model, options) {
+      return this.collection.columns.validate(model, options);
     }
   });
 
   Grid.Collection = Backbone.PageableCollection.extend({
     model: Grid.Model,
+    initialize: function() {
+      Backbone.PageableCollection.prototype.initialize.apply(this, arguments);
+      options = arguments[1];
+      this.columns = options.columns;
+    },
     url: function() {
       return '/'+Grid.url;
     },
@@ -61,6 +68,9 @@ Graviphoton.module('Grid', function(Grid, App, Backbone, Marionette, $, _, JST, 
     queryParams: {
       currentPage: 'page',
       pageSize: null
+    },
+    sync: function() {
+      Backbone.PageableCollection.prototype.sync.apply(this, arguments);
     },
     parseState: function(records, queryParams, state, options) {
       var links = this.parseLinks(records, options);
@@ -194,6 +204,7 @@ Graviphoton.module('Grid', function(Grid, App, Backbone, Marionette, $, _, JST, 
             newModel[value.attributes.name] = { 'en': '' }
           }
       });
+      newModel.isFromServer = false;
       this.gridView.insertRow(newModel);
     }
   });
@@ -214,6 +225,7 @@ Graviphoton.module('Grid', function(Grid, App, Backbone, Marionette, $, _, JST, 
     },
     loadFromSchema: function(schema, textStatus, request) {
       this.editableTable = (request.getResponseHeader('Access-Control-Allow-Methods').indexOf('PUT') != -1);
+      this.requiredFields = schema.items.required;
 
       _.each(schema.items.properties, this.loadColumnFromProperty, this);
     },
@@ -230,6 +242,19 @@ Graviphoton.module('Grid', function(Grid, App, Backbone, Marionette, $, _, JST, 
         editable: this.editableTable,
         translatable: property.translatable
       });
+    },
+    validate: function(model, options)
+    {
+      var errors = [];
+      var validateRequired = function(name) {
+        if (typeof this[name] === 'undefined') {
+          errors.push('require field '+name+' missing');
+        }
+      };
+      _.each(this.requiredFields, validateRequired, model);
+      if (errors.length > 0) {
+        return errors;
+      }
     }
   });
 
@@ -246,8 +271,13 @@ Graviphoton.module('Grid', function(Grid, App, Backbone, Marionette, $, _, JST, 
         Grid.url = grid.replace(/_/g, '/');
         var columns = new Grid.Columns([], { url: Grid.url });
         columns.fetch();
-        var collection = new Grid.Collection([], { url: Grid.url });
+        var collection = new Grid.Collection([], {
+            url: Grid.url,
+            columns: columns
+        });
         collection.fetch();
+
+        collection.model.validate = columns.validate;
 
         var view = new Grid.View({
           columns: columns,
