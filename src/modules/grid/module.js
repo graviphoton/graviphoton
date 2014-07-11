@@ -58,9 +58,24 @@ Graviphoton.module('Grid', function(Grid, App, Backbone, Marionette, $, _, JST, 
   });
 
   Backgrid.BooleanRequiredCell = Backgrid.BooleanCell.extend({
-    // do nothing since undefined is simply fals in such cases
+    // do nothing since undefined is simply false in such cases
   });
 
+  Grid.DeleteCell = Backgrid.Cell.extend({
+    template: _.template('<a style="cursor: pointer; hand: pointer;"><i class="icon-trash"></i></a>'),
+    events: {
+      "click": "deleteRow"
+    },
+    deleteRow: function(clickEvent) {
+      clickEvent.preventDefault();
+      this.model.destroy();
+    },
+    render: function() {
+      this.$el.html(this.template());
+      this.delegateEvents();
+      return this;
+    }
+  });
 
   Grid.url = '';
 
@@ -255,6 +270,13 @@ Graviphoton.module('Grid', function(Grid, App, Backbone, Marionette, $, _, JST, 
       this.requiredFields = schema.items.required;
 
       _.each(schema.items.properties, this.loadColumnFromProperty, this);
+
+      if (this.editableTable) {
+        this.push({
+          cell: Grid.DeleteCell,
+          editable: false
+        });
+      }
     },
     loadColumnFromProperty: function(property, name) {
       var type = property.type;
