@@ -266,7 +266,10 @@ Graviphoton.module('Grid', function(Grid, App, Backbone, Marionette, $, _, JST, 
       });
     },
     loadFromSchema: function(schema, textStatus, request) {
-      this.editableTable = (request.getResponseHeader('Access-Control-Allow-Methods').indexOf('PUT') != -1);
+      this.editableTable = false;
+      if (typeof request.getResponseHeader('Access-Control-Allow-Methods') === 'string') {
+        this.editableTable = (request.getResponseHeader('Access-Control-Allow-Methods').indexOf('PUT') != -1);
+      }
       this.requiredFields = schema.items.required;
 
       _.each(schema.items.properties, this.loadColumnFromProperty, this);
