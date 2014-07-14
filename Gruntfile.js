@@ -151,6 +151,10 @@ module.exports = function(grunt) {
         filter: 'isFile',
         src: '<%= dirs.bower.src %>/font-awesome/font/*.*',
         dest: '<%= dirs.dest %>/font/'
+      },
+      config: {
+        src: 'graviphoton.json',
+        dest: '<%= dirs.dest %>/graviphoton.json'
       }
     },
     /*
@@ -356,7 +360,7 @@ module.exports = function(grunt) {
    *
    * Create production artefacts like dist/index.html.
    */
-  grunt.registerTask('prod', ['env:prod', 'prepare', 'jst', 'preprocess:prod', 'concat', 'copy', 'replacer']);
+  grunt.registerTask('prod', ['env:prod', 'prepare', 'jst', 'preprocess:prod', 'copy:config', 'concat', 'copy', 'replacer']);
   /*
    * ### min
    *

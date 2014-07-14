@@ -1,5 +1,9 @@
 # Graviphoton [![Build Status](https://travis-ci.org/graviphoton/ui-core.png?branch=master)](https://travis-ci.org/graviphoton/ui-core)
 
+## Configuration
+
+You can change what graviton server that graviphoton should use by changing ``graviphoton.json`` in the project root.
+
 ## Hacking
 
 ### Setup machine globally for graviphoton development
