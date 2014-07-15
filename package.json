@@ -36,6 +36,8 @@
     "grunt-preprocess": "~3.0.1",
     "grunt-env": "~0.4.0",
     "grunt-contrib-jst": "~0.5.1",
-    "grunt-bower-task": "~0.3.2"
+    "grunt-bower-task": "~0.3.2",
+    "grunt-contrib-less": "^0.11.3",
+    "less": "^1.7.3"
   }
 }

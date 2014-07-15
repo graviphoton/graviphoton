@@ -27,7 +27,7 @@ Graviphoton.module('Grid', function(Grid, App, Backbone, Marionette, $, _, JST, 
     }
   });
   Backgrid.I18nCell = Backgrid.Cell.extend({
-    className: 'i18n-cell',
+    className: 'i18n-cell col-md-1',
     formatter: Backgrid.I18nFormatter,
     editor: Backgrid.I18nEditor
   });
@@ -45,6 +45,7 @@ Graviphoton.module('Grid', function(Grid, App, Backbone, Marionette, $, _, JST, 
   });
 
   Backgrid.StringRequiredCell = Backgrid.StringCell.extend({
+    className: 'string-cell col-md-1',
     render: function() {
       var rendered = Backgrid.StringCell.prototype.render.apply(this, arguments);
       var value = this.model.get(this.column.get("name"));
@@ -58,10 +59,12 @@ Graviphoton.module('Grid', function(Grid, App, Backbone, Marionette, $, _, JST, 
   });
 
   Backgrid.BooleanRequiredCell = Backgrid.BooleanCell.extend({
+    className: 'boolean-cell col-md-1',
     // do nothing since undefined is simply false in such cases
   });
 
   Grid.DeleteCell = Backgrid.Cell.extend({
+    className: 'delete-cell col-md-1',
     template: _.template('<a style="cursor: pointer; hand: pointer;"><i class="icon-trash"></i></a>'),
     events: {
       "click": "deleteRow"

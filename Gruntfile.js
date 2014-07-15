@@ -97,6 +97,16 @@ module.exports = function(grunt) {
       }
     },
     /**
+     * LESS
+     */
+    less: {
+      all: {
+        files: {
+          "<%= dirs.src %>/modules/grid/module.css": "<%= dirs.src %>/modules/grid/module.less"
+        }
+      }
+    },
+    /**
      * ### Concat
      *
      * In the concat phase js, css and other files are combined into an unminified
@@ -330,13 +340,15 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-jst');
   // - bower: bower package manager
   //grunt.loadNpmTasks('grunt-bower-task');
+  // - less: less css compiler
+  grunt.loadNpmTasks('grunt-contrib-less');
 
   /*
    * ## Tasks
    * @todo this section needs some work to get rid of duplicate calls
    * ### prepare
    */
-  grunt.registerTask('prepare', []);
+  grunt.registerTask('prepare', ['less:all']);
   /*
    * ### test
    *
