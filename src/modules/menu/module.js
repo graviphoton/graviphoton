@@ -76,6 +76,9 @@ Graviphoton.module('Menu', function(Menu, App, Backbone, Marionette, $, _, JST, 
     emptyView: Menu.EmptyItemView,
     tagName: 'ul',
     className: 'nav navbar-nav',
+    attributes: {
+      role: 'menubar'
+    },
     initialize: function(options) {
       this.options = options;
       this.errorHandle = this.options.error || console.error;
