@@ -44,6 +44,7 @@
 
     /** @property */
     dateFormat: false,
+    calendarVisible: false,
 
     datePickerOptions: {},
 
@@ -69,10 +70,20 @@
       }
     },
 
+    saveOrCancel: function (e) {
+      // here, we block the blur event if a calendar is visible..
+      if (this.calendarVisible == false) {
+        DatePickerEditor.__super__.saveOrCancel.apply(this, arguments);
+      }
+    },
+
     /**
      Renders the datepicker on our editor
      */
     render: function () {
+
+      DatePickerEditor.__super__.render.apply(this, arguments);
+
       this.delegateEvents();
 
       var initOptions = $.extend(this.datePickerOptions, {
@@ -84,9 +95,13 @@
 
       this.$el.datepicker(initOptions)
         // pass on blur..
-        .on('hide', function(e){
-          this.trigger('blur');
-        }.bind(this.$el));
+        .on('show', function(e) {
+          this.calendarVisible = true;
+        }.bind(this))
+        .on('hide', function(e) {
+          this.calendarVisible = false;
+          this.$el.trigger('blur');
+       }.bind(this));
 
       return this;
     }
