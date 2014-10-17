@@ -63,6 +63,16 @@ Graviphoton.module('Grid', function(Grid, App, Backbone, Marionette, $, _, JST, 
     // do nothing since undefined is simply false in such cases
   });
 
+  // configure datepickercell
+  Backgrid.Extension.DatepickerCell = Backgrid.Extension.DatepickerCell.extend({
+    datePickerOptions: {
+      autoclose: true,
+      calendarWeeks: true,
+      todayHighlight: true,
+      weekStart: 1
+    }
+  });
+
   Grid.DeleteCell = Backgrid.Cell.extend({
     className: 'delete-cell col-md-1',
     template: _.template('<a style="cursor: pointer; hand: pointer;"><i class="icon-trash"></i></a>'),

@@ -45,11 +45,7 @@
     /** @property */
     dateFormat: false,
 
-    datePickerOptions: {
-      multidate: false,
-      calendarWeeks: true,
-      autoclose: true
-    },
+    datePickerOptions: {},
 
     // sadly, our datepicker uses a different date format as moment.js ;-((
     dateFormatReplacements: {
@@ -83,16 +79,33 @@
         format: this.dateFormat
       });
 
-      this.$el.datepicker(initOptions);
+      // set language just now ;-)
+      initOptions.language = moment.lang();
+
+      this.$el.datepicker(initOptions)
+        // pass on blur..
+        .on('hide', function(e){
+          this.trigger('blur');
+        }.bind(this.$el));
 
       return this;
     }
 
   });
 
-  Backgrid.Extension.DatepickerCell = Backgrid.Extension.MomentCell.extend({
+  var DatepickerCell = Backgrid.Extension.DatepickerCell = Backgrid.Extension.MomentCell.extend({
     editor: DatePickerEditor,
-    displayFormat: moment.langData().longDateFormat("L")
+    datePickerOptions: {},
+    displayFormat: moment.langData().longDateFormat("L"),
+
+    initialize: function (options) {
+      DatepickerCell.__super__.initialize.apply(this, arguments);
+
+      this.editor = this.editor.extend({
+        datePickerOptions: _.extend({}, this.editor.datePickerOptions, this.datePickerOptions)
+      });
+    }
+
   });
 
 }));

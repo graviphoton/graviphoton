@@ -149,6 +149,9 @@ module.exports = function(grunt) {
       css: {
         src: [
           '<%= dirs.bower.src %>/bootstrap/dist/css/bootstrap.css',
+
+          '<%= dirs.bower.src %>/bootstrap-datepicker/css/datepicker3.css',
+
           '<%= dirs.bower.src %>/bootstrap/dist/css/bootstrap-theme.css',
           '<%= dirs.bower.src %>/font-awesome/css/font-awesome.css',
           '<%= dirs.src %>/**/*.css'
