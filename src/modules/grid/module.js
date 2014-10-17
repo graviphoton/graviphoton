@@ -59,8 +59,18 @@ Graviphoton.module('Grid', function(Grid, App, Backbone, Marionette, $, _, JST, 
   });
 
   Backgrid.BooleanRequiredCell = Backgrid.BooleanCell.extend({
-    className: 'boolean-cell col-md-1',
+    className: 'boolean-cell col-md-1'
     // do nothing since undefined is simply false in such cases
+  });
+
+  // configure datepickercell
+  Backgrid.Extension.DatepickerCell = Backgrid.Extension.DatepickerCell.extend({
+    datePickerOptions: {
+      autoclose: true,
+      calendarWeeks: true,
+      todayHighlight: true,
+      weekStart: 1
+    }
   });
 
   Grid.DeleteCell = Backgrid.Cell.extend({
@@ -199,17 +209,17 @@ Graviphoton.module('Grid', function(Grid, App, Backbone, Marionette, $, _, JST, 
         ul.appendChild(handle.render().el);
       });
 
-      var btnNew = document.createElement('a');
-      btnNew.textContent = '+';
-      var btnLi = document.createElement('li');
-      btnLi.appendChild(btnNew);
-      ul.appendChild(btnLi);
+      // add row button
+      var newButton = $('<a>')
+        .addClass('clickable')
+        .html('+')
+        .appendTo($(ul))
+        .wrap('<li></li>')
+        .click(function() {
+          Graviphoton.trigger('grid:new');
+        });
 
-      $(btnNew).click(function() {
-        Graviphoton.trigger('grid:new');
-      });
-
-      this.el.appendChild(ul);
+      this.$el.append(ul);
       return this;
     }
   });
@@ -292,6 +302,8 @@ Graviphoton.module('Grid', function(Grid, App, Backbone, Marionette, $, _, JST, 
       if (property.translatable) {
         type = 'i18n';
       }
+      if (type == 'date') type = 'datepicker';
+
       if (this.requiredFields.indexOf(name) != -1) {
         cellName = type.charAt(0).toUpperCase() + type.slice(1) + 'RequiredCell';
         if (typeof Backgrid[cellName] !== 'undefined') {

@@ -6,3 +6,6 @@
   margin-top: 8px;
 }
 
+.clickable {
+    cursor: pointer;
+}

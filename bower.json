@@ -22,7 +22,10 @@
     "backbone.paginator": "~2.0.0",
     "backbone-schema": "https://github.com/redpie/backbone-schema.git",
     "backgrid": "~0.3.5",
-    "backgrid-paginator": "~0.3.5"
+    "backgrid-paginator": "~0.3.5",
+
+    "bootstrap-datepicker": "https://github.com/eternicode/bootstrap-datepicker.git",
+    "backgrid-moment-cell": "~0.3.5"
   },
   "resolutions": {
     "backbone": "~1.1.0",
