@@ -1,4 +1,4 @@
-# Graviphoton [![Build Status](https://travis-ci.org/graviphoton/ui-core.png?branch=master)](https://travis-ci.org/graviphoton/ui-core)
+# Graviphoton [![Build Status](https://travis-ci.org/graviphoton/ui-core.png?branch=master)](https://travis-ci.org/graviphoton/graviphoton)
 
 ## Configuration
 
