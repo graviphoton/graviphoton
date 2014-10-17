@@ -199,17 +199,17 @@ Graviphoton.module('Grid', function(Grid, App, Backbone, Marionette, $, _, JST, 
         ul.appendChild(handle.render().el);
       });
 
-      var btnNew = document.createElement('a');
-      btnNew.textContent = '+';
-      var btnLi = document.createElement('li');
-      btnLi.appendChild(btnNew);
-      ul.appendChild(btnLi);
+      // add row button
+      var newButton = $('<a>')
+        .addClass('clickable')
+        .html('+')
+        .appendTo($(ul))
+        .wrap('<li></li>')
+        .click(function() {
+          Graviphoton.trigger('grid:new');
+        });
 
-      $(btnNew).click(function() {
-        Graviphoton.trigger('grid:new');
-      });
-
-      this.el.appendChild(ul);
+      this.$el.append(ul);
       return this;
     }
   });
@@ -293,7 +293,6 @@ Graviphoton.module('Grid', function(Grid, App, Backbone, Marionette, $, _, JST, 
         type = 'i18n';
       }
       if (type == 'date') type = 'datepicker';
-
 
       if (this.requiredFields.indexOf(name) != -1) {
         cellName = type.charAt(0).toUpperCase() + type.slice(1) + 'RequiredCell';
