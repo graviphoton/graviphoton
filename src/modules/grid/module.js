@@ -59,7 +59,7 @@ Graviphoton.module('Grid', function(Grid, App, Backbone, Marionette, $, _, JST, 
   });
 
   Backgrid.BooleanRequiredCell = Backgrid.BooleanCell.extend({
-    className: 'boolean-cell col-md-1',
+    className: 'boolean-cell col-md-1'
     // do nothing since undefined is simply false in such cases
   });
 
@@ -292,6 +292,9 @@ Graviphoton.module('Grid', function(Grid, App, Backbone, Marionette, $, _, JST, 
       if (property.translatable) {
         type = 'i18n';
       }
+      if (type == 'date') type = 'datepicker';
+
+
       if (this.requiredFields.indexOf(name) != -1) {
         cellName = type.charAt(0).toUpperCase() + type.slice(1) + 'RequiredCell';
         if (typeof Backgrid[cellName] !== 'undefined') {

@@ -130,13 +130,20 @@ module.exports = function(grunt) {
           '<%= dirs.bower.src %>/backbone-schema/backbone-schema.js',
           '<%= dirs.bower.src %>/backgrid/lib/backgrid.js',
           '<%= dirs.bower.src %>/backgrid-paginator/backgrid-paginator.js',
+
+          /* this is for the datepicker cell which i want to externalize as dep as soon as i know how *g */
+          '<%= dirs.bower.src %>/moment/moment.js',
+          '<%= dirs.bower.src %>/backgrid-moment-cell/backgrid-moment-cell.js',
+          '<%= dirs.bower.src %>/bootstrap-datepicker/js/bootstrap-datepicker.js',
+          '<%= dirs.src %>/components/backgrid-datepicker-cell/backgrid-datepicker-cell.js',
+
           '<%= dirs.bower.src %>/bootstrap/dist/js/bootstrap.js',
           '<%= dirs.dest %>/templates.js',
           '<%= dirs.src %>/graviphoton.js',
           '<%= dirs.src %>/graviphoton.sync.js',
           '<%= dirs.src %>/modules/**/*.js'
         ],
-        dest: '<%= dirs.dest %>/<%= pkg.name %>.js',
+        dest: '<%= dirs.dest %>/<%= pkg.name %>.js'
       },
       // * css
       css: {
@@ -146,7 +153,7 @@ module.exports = function(grunt) {
           '<%= dirs.bower.src %>/font-awesome/css/font-awesome.css',
           '<%= dirs.src %>/**/*.css'
         ],
-        dest: '<%= dirs.dest %>/<%= pkg.name %>.css',
+        dest: '<%= dirs.dest %>/<%= pkg.name %>.css'
       }
     },
     /*
