@@ -36,7 +36,7 @@
   // this view is our checkbox..
   var GlyphbooleanCheckbox = Backgrid.Extension.GlyphbooleanCheckbox = Backbone.View.extend({
 
-    //tagName: 'span',
+    tagName: 'span',
     classNameUnchecked: 'glyphicon-unchecked',
     classNameChecked: 'glyphicon-check',
     column: false,
@@ -44,9 +44,9 @@
 
     render: function() {
 
-      console.log(this.model);
-      console.log(this.column);
-      console.log('--------------');
+      //console.log(this.model);
+      //console.log(this.column);
+      //console.log('--------------');
 
 
       var model = this.model;
@@ -60,15 +60,30 @@
         checkClass = this.classNameUnchecked
       }
 
-      var checkbox = $('<span>', {
-        disabled: !editable
-      }).addClass('glyphicon')
+      this.$el
+        .addClass('glyphicon')
         .addClass('clickable')
         .addClass(checkClass);
+      /*
+      var checkbox = $('<div>', {
+        disabled: !editable
+      })
 
       this.$el.append(checkbox);
+      */
+
       return this;
 
+    },
+
+    applyToView: function(view) {
+
+      this.render();
+
+      view.$el.empty();
+      view.$el.append(this.$el);
+
+      view.delegateEvents();
     }
 
   });
@@ -82,7 +97,15 @@
 
   var GlyphbooleanEditor = Backgrid.Extension.GlyphbooleanEditor = Backgrid.CellEditor.extend({
 
-    tagName: 'span',
+    //tagName: 'span',
+
+    events: {
+      'click': 'toggleValue'
+    },
+
+    exitEditMode: function(e) {
+      this.model.trigger('backgrid:edited', this.model, this.column, new Backgrid.Command(e));
+    },
 
     toggleValue: function(e) {
 
@@ -116,12 +139,31 @@
         model: this.model
       }), {column: this.column, displayValue: this.getCurrentValue()});
 
+      checkbox.applyToView(this);
+      this.$el.children('span.glyphicon').focus();
+
+      //this.$el.append($('<span>dud</span>'));
+
+
+      /*
+      var checkbox = _.extend(new Backgrid.Extension.GlyphbooleanCheckbox({
+        model: this.model
+      }), {column: this.column, displayValue: this.getCurrentValue()});
+
       this.$el.empty();
       this.$el.append(checkbox.render().$el);
 
       this.delegateEvents();
 
       console.log(this.column);
+      */
+
+      console.log('edit! ' + this.column.id);
+
+      this.delegateEvents();
+
+      //this.model.trigger("backgrid:edited", this.model, this.column, new Backgrid.Command({}));
+
       //this.$el = this.prevEl;
       //console.log(this.$el.data('checkedClass'));
 
@@ -143,7 +185,6 @@
 
   var GlyphbooleanCell = Backgrid.Extension.GlyphbooleanCell = Backgrid.Cell.extend({
     editor: GlyphbooleanEditor,
-
     className: 'glyphboolean-cell',
 
     /** @property */
@@ -155,16 +196,20 @@
     },
     */
 
+    events: {
+      'mouseover': 'enterEditMode'
+      //'mouseleave': 'exitEditMode'
+    },
+
     render: function () {
+
+      console.log('back to basic');
 
       var checkbox = _.extend(new Backgrid.Extension.GlyphbooleanCheckbox({
         model: this.model
       }), {column: this.column, displayValue: this.getCurrentValue()});
 
-      checkbox.render();
-
-      this.$el.empty();
-      this.$el.append(checkbox.$el);
+      checkbox.applyToView(this);
 
       this.delegateEvents();
 
