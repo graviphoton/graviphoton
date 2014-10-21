@@ -58,9 +58,14 @@ Graviphoton.module('Grid', function(Grid, App, Backbone, Marionette, $, _, JST, 
     }
   });
 
+  // this may be obsolete; replaced by glyphboolean - btw, *how* can a boolean even be "required"?
   Backgrid.BooleanRequiredCell = Backgrid.BooleanCell.extend({
     className: 'boolean-cell col-md-1'
     // do nothing since undefined is simply false in such cases
+  });
+
+  // this is just an alias
+  Backgrid.GlyphbooleanRequiredCell = Backgrid.Extension.GlyphbooleanCell.extend({
   });
 
   // configure datepickercell
@@ -303,6 +308,7 @@ Graviphoton.module('Grid', function(Grid, App, Backbone, Marionette, $, _, JST, 
         type = 'i18n';
       }
       if (type == 'date') type = 'datepicker';
+      if (type == 'boolean') type = 'glyphboolean';
 
       if (this.requiredFields.indexOf(name) != -1) {
         cellName = type.charAt(0).toUpperCase() + type.slice(1) + 'RequiredCell';
